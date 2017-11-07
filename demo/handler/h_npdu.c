@@ -24,6 +24,7 @@
 *********************************************************************/
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include "bacdef.h"
 #include "bacdcode.h"
 #include "bacint.h"
@@ -69,9 +70,12 @@ void npdu_handler(
     uint16_t pdu_len)
 {       /* length PDU  */
     int apdu_offset = 0;
-    BACNET_ADDRESS dest = { 0 };
-    BACNET_NPDU_DATA npdu_data = { 0 };
+    BACNET_ADDRESS dest;
+    BACNET_NPDU_DATA npdu_data;
 
+    memset(&dest, 0, sizeof(dest));
+    memset(&npdu_data, 0, sizeof(npdu_data));
+    
     /* only handle the version that we know how to handle */
     if (pdu[0] == BACNET_PROTOCOL_VERSION) {
         apdu_offset = npdu_decode(&pdu[0], &dest, src, &npdu_data);

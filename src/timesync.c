@@ -142,7 +142,7 @@ int timesync_encode_timesync_recipients(
     unsigned max_apdu,
     BACNET_RECIPIENT_LIST * recipient)
 {
-    int len = 0;
+    size_t len = 0;
     int apdu_len = 0;
     BACNET_OCTET_STRING octet_string;
     BACNET_RECIPIENT_LIST *pRecipient;
@@ -244,6 +244,8 @@ int timesync_decode_timesync_recipients(
     BACNET_OCTET_STRING octet_string;
     BACNET_RECIPIENT_LIST *pRecipient;
 
+    (void)max_apdu;
+    
     pRecipient = recipient;
     while (pRecipient != NULL) {
         /* device [0] BACnetObjectIdentifier */

@@ -38,6 +38,8 @@
 #include "bip.h"
 #include "net.h"
 
+#include "candi_s.h"
+
 /** @file linux/bip-init.c  Initializes BACnet/IP interface (Linux). */
 
 bool BIP_Debug = false;
@@ -66,7 +68,7 @@ static int get_local_ifr_ioctl(
     int fd;
     int rv;     /* return value */
 
-    strncpy(ifr->ifr_name, ifname, sizeof(ifr->ifr_name));
+    strcpy_s(ifr->ifr_name, sizeof(ifr->ifr_name), ifname);
     fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (fd < 0) {
         rv = fd;
@@ -89,14 +91,16 @@ int get_local_address_ioctl(
     struct in_addr *addr,
     int request)
 {
-    struct ifreq ifr = { {{0}} };
+    struct ifreq ifr;
     struct sockaddr_in *tcpip_address;
     int rv;     /* return value */
 
+    memset(&ifr, 0, sizeof(ifr));
+    
     rv = get_local_ifr_ioctl(ifname, &ifr, request);
     if (rv >= 0) {
         tcpip_address = (struct sockaddr_in *) &ifr.ifr_addr;
-        memcpy(addr, &tcpip_address->sin_addr, sizeof(struct in_addr));
+        memcpy_s(addr, sizeof(struct in_addr), &tcpip_address->sin_addr, sizeof(struct in_addr));
     }
 
     return rv;

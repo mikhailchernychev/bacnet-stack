@@ -261,12 +261,13 @@ int wpm_encode_apdu(
 	uint8_t invoke_id,
 	BACNET_WRITE_ACCESS_DATA * write_access_data)
 {
-	int apdu_len = 0;
-	int len = 0;
-	BACNET_WRITE_ACCESS_DATA *wpm_object;        /* current object */
-	uint8_t apdu_temp[MAX_APDU];      /* temp for data before copy */
-	BACNET_PROPERTY_VALUE *wpm_property;    /* current property */
-	BACNET_WRITE_PROPERTY_DATA wpdata;	/* for compatibility with wpm_encode_apdu_object_property function */
+    (void) max_apdu;
+    int apdu_len = 0;
+    int len = 0;
+    BACNET_WRITE_ACCESS_DATA *wpm_object;       /* current object */
+    uint8_t apdu_temp[MAX_APDU];        /* temp for data before copy */
+    BACNET_PROPERTY_VALUE *wpm_property;        /* current property */
+    BACNET_WRITE_PROPERTY_DATA wpdata;  /* for compatibility with wpm_encode_apdu_object_property function */
 
 	if (apdu) {
 		len =  wpm_encode_apdu_init(&apdu[0], invoke_id);

@@ -43,6 +43,8 @@
 #include <stdio.h>      /* for standard i/o, like printing */
 #endif
 
+#include "candi_s.h"
+
 /** @file bip.c  Configuration and Operations for BACnet/IP */
 
 static int BIP_Socket = -1;
@@ -127,8 +129,8 @@ static int bip_decode_bip_address(
     int len = 0;
 
     if (bac_addr) {
-        memcpy(&address->s_addr, &bac_addr->mac[0], 4);
-        memcpy(port, &bac_addr->mac[4], 2);
+        memcpy_s(&address->s_addr, 4, &bac_addr->mac[0], 4);
+        memcpy_s(port, 2, &bac_addr->mac[4], 2);
         len = 6;
     }
 
@@ -194,7 +196,7 @@ int bip_send_pdu(
     mtu_len +=
         encode_unsigned16(&mtu[mtu_len],
         (uint16_t) (pdu_len + 4 /*inclusive */ ));
-    memcpy(&mtu[mtu_len], pdu, pdu_len);
+    memcpy_s(&mtu[mtu_len], MAX_MPDU, pdu, pdu_len);
     mtu_len += pdu_len;
 
     /* Send the packet */
@@ -227,11 +229,13 @@ uint16_t bip_receive(
     fd_set read_fds;
     int max = 0;
     struct timeval select_timeout;
-    struct sockaddr_in sin = { 0 };
+    struct sockaddr_in sin;
     socklen_t sin_len = sizeof(sin);
     uint16_t i = 0;
     int function = 0;
 
+    memset(&sin, 0, sizeof(sin));
+    
     /* Make sure the socket is open */
     if (BIP_Socket < 0)
         return 0;
@@ -292,8 +296,8 @@ uint16_t bip_receive(
         } else {
             /* data in src->mac[] is in network format */
             src->mac_len = 6;
-            memcpy(&src->mac[0], &sin.sin_addr.s_addr, 4);
-            memcpy(&src->mac[4], &sin.sin_port, 2);
+            memcpy_s(&src->mac[0], 4, &sin.sin_addr.s_addr, 4);
+            memcpy_s(&src->mac[4], 2, &sin.sin_port, 2);
             /* FIXME: check destination address */
             /* see if it is broadcast or for us */
             /* decode the length of the PDU - length is inclusive of BVLC */
@@ -325,8 +329,8 @@ uint16_t bip_receive(
             }
         }
     } else if (function == BVLC_FORWARDED_NPDU) {
-        memcpy(&sin.sin_addr.s_addr, &pdu[4], 4);
-        memcpy(&sin.sin_port, &pdu[8], 2);
+        memcpy_s(&sin.sin_addr.s_addr, 4, &pdu[4], 4);
+        memcpy_s(&sin.sin_port, 2, &pdu[8], 2);
         if ((sin.sin_addr.s_addr == BIP_Address.s_addr) &&
             (sin.sin_port == BIP_Port)) {
             /* ignore messages from me */
@@ -334,8 +338,8 @@ uint16_t bip_receive(
         } else {
             /* data in src->mac[] is in network format */
             src->mac_len = 6;
-            memcpy(&src->mac[0], &sin.sin_addr.s_addr, 4);
-            memcpy(&src->mac[4], &sin.sin_port, 2);
+            memcpy_s(&src->mac[0], 4, &sin.sin_addr.s_addr, 4);
+            memcpy_s(&src->mac[4], 2, &sin.sin_port, 2);
             /* FIXME: check destination address */
             /* see if it is broadcast or for us */
             /* decode the length of the PDU - length is inclusive of BVLC */
@@ -365,8 +369,8 @@ void bip_get_my_address(
 
     if (my_address) {
         my_address->mac_len = 6;
-        memcpy(&my_address->mac[0], &BIP_Address.s_addr, 4);
-        memcpy(&my_address->mac[4], &BIP_Port, 2);
+        memcpy_s(&my_address->mac[0], 4, &BIP_Address.s_addr, 4);
+        memcpy_s(&my_address->mac[4], 2, &BIP_Port, 2);
         my_address->net = 0;    /* local only, no routing */
         my_address->len = 0;    /* no SLEN */
         for (i = 0; i < MAX_MAC_LEN; i++) {
@@ -385,8 +389,8 @@ void bip_get_broadcast_address(
 
     if (dest) {
         dest->mac_len = 6;
-        memcpy(&dest->mac[0], &BIP_Broadcast_Address.s_addr, 4);
-        memcpy(&dest->mac[4], &BIP_Port, 2);
+        memcpy_s(&dest->mac[0], 4, &BIP_Broadcast_Address.s_addr, 4);
+        memcpy_s(&dest->mac[4], 2, &BIP_Port, 2);
         dest->net = BACNET_BROADCAST_NETWORK;
         dest->len = 0;  /* no SLEN */
         for (i = 0; i < MAX_MAC_LEN; i++) {

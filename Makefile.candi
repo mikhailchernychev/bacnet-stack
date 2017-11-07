@@ -1,0 +1,41 @@
+
+TOP := $(shell realpath ../..)
+export TOP
+
+BACNET_VER ?= 0.8.5
+
+#target = libbacnet   
+#shared_library=$(target)
+
+
+include $(TOP)/includes/library.mk
+CANDI_S=$(TOP)/build-$(system)/libcandi_s.so/candi_s.o
+CANDI_I=$(TOP)/libcandi_s
+
+export staging
+export CC
+export AR
+export CANDI_S
+export CANDI_I
+
+target = libbacnet
+
+unpack:
+
+configure:
+
+build:  
+	$(MAKE) -f bacnet.mk
+	$(MAKE) -f Makefile
+
+install:
+	$(MAKE) -f bacnet.mk includes
+	
+
+clean::
+	$(MAKE) -f Makefile clean
+	rm -rf $(TOP)/build-$(system)/$(target).so
+	rm -rf $(TOP)/build-$(system)/staging/usr/include/bacnet
+	find . -name "*.o" -exec rm {} \;
+	find . -name "*.a" -exec rm {} \;
+	find . -executable -type f ! -name "*.*" -exec rm {} \;

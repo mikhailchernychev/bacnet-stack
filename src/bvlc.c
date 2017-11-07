@@ -332,7 +332,8 @@ int bvlc_bbmd_read_bdt(
     uint8_t mtu[MAX_MPDU] = { 0 };
     uint16_t mtu_len = 0;
     int rv = 0;
-    struct sockaddr_in bbmd = { 0 };
+    struct sockaddr_in bbmd;
+    memset(&bbmd, 0, sizeof(bbmd));
 
     mtu_len = bvlc_encode_read_bdt(mtu);
     if (mtu_len > 0) {
@@ -763,10 +764,12 @@ static bool bvlc_register_foreign_device(
 static bool bvlc_delete_foreign_device(
     uint8_t * pdu)
 {
-    struct sockaddr_in sin = { 0 };     /* the ip address */
+    struct sockaddr_in sin;     /* the ip address */
     bool status = false;        /* return value */
     unsigned i = 0;
 
+    memset(&sin, 0, sizeof(sin));
+    
     bvlc_decode_bip_address(pdu, &sin.sin_addr, &sin.sin_port);
     for (i = 0; i < MAX_FD_ENTRIES; i++) {
         if (FD_Table[i].valid) {
@@ -800,7 +803,8 @@ int bvlc_send_mpdu(
     uint8_t * mtu,
     uint16_t mtu_len)
 {
-    struct sockaddr_in bvlc_dest = { 0 };
+    struct sockaddr_in bvlc_dest;
+    memset(&bvlc_dest, 0, sizeof(bvlc_dest));
 
     /* assumes that the driver has already been initialized */
     if (bip_socket() < 0) {
@@ -1664,6 +1668,7 @@ BACNET_BVLC_FUNCTION bvlc_get_function_code(
  *
  * @return Number of valid entries in the table or -1 on error.
  */
+#if defined(BBMD_ENABLED) && BBMD_ENABLED
 int bvlc_get_bdt_local(
      const BBMD_TABLE_ENTRY** table)
 {
@@ -1743,6 +1748,7 @@ void bvlc_set_global_address_for_nat(const struct in_addr* addr)
     BVLC_Global_Address = *addr;
     BVLC_NAT_Handling = true;
 }
+#endif // BBMD enabled
 
 /** Disable NAT handling.
  */

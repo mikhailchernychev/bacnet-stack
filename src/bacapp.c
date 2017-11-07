@@ -1005,10 +1005,10 @@ static bool append_str(
     const char *add_str)
 {
     bool retval;
-    uint16_t bytes_written;
+    int16_t bytes_written;
 
     bytes_written = snprintf(*str, *rem_str_len, "%s", add_str);
-    if ((bytes_written < 0) || (bytes_written >= *rem_str_len)) {
+    if ((bytes_written < 0) || ((size_t) bytes_written >= *rem_str_len)) {
         /* If there was an error or output was truncated, return error */
         retval = false;
     } else {
@@ -1372,7 +1372,7 @@ bool bacapp_print_value(
         /* Try to extract the value into allocated memory. If unable, try again */
         /* another time with a string that is twice as large. */
         status = bacapp_snprintf_value(str, str_len, object_value);
-        if ((status < 0) || (status >= str_len)) {
+        if ((status < 0) || ((size_t)status >= str_len)) {
             free(str);
             str_len *= 2;
         } else if (status == 0) {
