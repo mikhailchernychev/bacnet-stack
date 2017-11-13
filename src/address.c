@@ -239,7 +239,7 @@ static void address_file_init(
     int count = 0;
     char mac_string[80] = { "" }, sadr_string[80] = {
     ""};
-    BACNET_ADDRESS src = { 0 };
+    BACNET_ADDRESS src = { 0, { 0, 0, 0, 0, 0, 0, 0 }, 0, 0, { 0, 0, 0, 0, 0, 0, 0 } };
     int index = 0;
 
     pFile = fopen(pFilename, "r");

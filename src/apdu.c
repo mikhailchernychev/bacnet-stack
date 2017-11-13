@@ -444,8 +444,8 @@ void apdu_handler(
     uint8_t * apdu,     /* APDU data */
     uint16_t apdu_len)
 {
-    BACNET_CONFIRMED_SERVICE_DATA service_data = { 0 };
-    BACNET_CONFIRMED_SERVICE_ACK_DATA service_ack_data = { 0 };
+    BACNET_CONFIRMED_SERVICE_DATA service_data = { false, false, false, 0, 0, 0, 0, 0 };
+    BACNET_CONFIRMED_SERVICE_ACK_DATA service_ack_data = { false, false, 0, 0, 0 };
     uint8_t invoke_id = 0;
     uint8_t service_choice = 0;
     uint8_t *service_request = NULL;
