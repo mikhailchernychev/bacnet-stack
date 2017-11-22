@@ -8,16 +8,16 @@ bacnet := .
 
 
 
-CFLAGS += -I $(bacnet)/include -I $(bacnet)/ports/linux -I $(bacnet)/demo/object \
+CFLAGS += -g -I $(bacnet)/include -I $(bacnet)/ports/linux -I $(bacnet)/demo/object \
           -DPRINT_ENABLED=1 -DBACAPP_ALL -DBACDL_BIP=1 -DBBMD_ENABLED=0 \
-          -DBACNET_VENDOR_NAME="\"Candi Controls IoT Server(tm)\""
+          -DBACNET_VENDOR_NAME="\"Candi Controls IoT Server(tm)\"" -DBACNET_VENDOR_ID=894
 
 
 libfiles := $(filter-out $(bacnet)/src/mstp.c, $(wildcard $(bacnet)/src/*.c))
 libfiles := $(filter-out $(bacnet)/src/datalink.c, $(libfiles))
 libfiles := $(filter-out $(bacnet)/src/ucix.c, $(libfiles))
 
-libfiles +=  $(bacnet)/demo/object/device-client.c
+libfiles += $(bacnet)/demo/object/candi-device-client.c 
 
 libfiles += $(bacnet)/demo/handler/h_whois.c   $(bacnet)/demo/handler/h_iam.c \
             $(bacnet)/demo/handler/noserv.c    $(bacnet)/demo/handler/txbuf.c \
@@ -26,6 +26,7 @@ libfiles += $(bacnet)/demo/handler/h_whois.c   $(bacnet)/demo/handler/h_iam.c \
 	    $(bacnet)/demo/handler/h_npdu.c    $(bacnet)/demo/handler/s_rpm.c  \
             $(bacnet)/demo/handler/dlenv.c     $(bacnet)/demo/handler/s_whois.c \
             $(bacnet)/demo/handler/s_router.c  $(bacnet)/demo/handler/s_cov.c \
+            $(bacnet)/demo/handler/h_rpm.c 
 
 
 libfiles += $(bacnet)/ports/linux/bip-init.c 
