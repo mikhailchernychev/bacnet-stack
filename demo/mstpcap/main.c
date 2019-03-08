@@ -450,7 +450,7 @@ uint16_t MSTP_Get_Reply(
     return 0;
 }
 
-static char Capture_Filename[32] = "mstp_20090123091200.cap";
+static char Capture_Filename[64] = "mstp_20090123091200.cap";
 static FILE *pFile = NULL;      /* stream pointer */
 #if defined(_WIN32)
 static HANDLE hPipe = INVALID_HANDLE_VALUE;     /* pipe handle */
@@ -1205,7 +1205,11 @@ int main(
             packet_count++;
         } else if (mstp_port->receive_state == MSTP_RECEIVE_STATE_IDLE) {
             if (MSTP_Receive_State == MSTP_RECEIVE_STATE_IDLE) {
-                if (mstp_port->EventCount) {
+                if ((mstp_port->EventCount == 1) &&
+                    (mstp_port->DataRegister == 0xFF)) {
+                    /* 0xFF padding at end of message is allowed */
+                    mstp_structure_init(mstp_port);
+                } else if (mstp_port->EventCount > 1) {
                     write_received_packet(mstp_port, 1);
                     mstp_structure_init(mstp_port);
                     Invalid_Frame_Count++;
