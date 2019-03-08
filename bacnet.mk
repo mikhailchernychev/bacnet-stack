@@ -9,7 +9,7 @@ bacnet := .
 
 
 CFLAGS += -g -I $(bacnet)/include -I $(bacnet)/ports/linux -I $(bacnet)/demo/object \
-          -DPRINT_ENABLED=1 -DBACAPP_ALL -DBACDL_BIP=1 -DBBMD_ENABLED=0 \
+          -DPRINT_ENABLED=1 -DBACAPP_ALL -DBACDL_BIP=1 -DBBMD_ENABLED=1 \
           -DBACNET_VENDOR_NAME="\"Candi Controls IoT Server(tm)\"" -DBACNET_VENDOR_ID=894
 
 
@@ -26,7 +26,8 @@ libfiles += $(bacnet)/demo/handler/h_whois.c   $(bacnet)/demo/handler/h_iam.c \
 	    $(bacnet)/demo/handler/h_npdu.c    $(bacnet)/demo/handler/s_rpm.c  \
             $(bacnet)/demo/handler/dlenv.c     $(bacnet)/demo/handler/s_whois.c \
             $(bacnet)/demo/handler/s_router.c  $(bacnet)/demo/handler/s_cov.c \
-            $(bacnet)/demo/handler/h_rpm.c 
+            $(bacnet)/demo/handler/h_rpm.c     $(bacnet)/demo/handler/h_wp.c \
+            $(bacnet)/demo/handler/h_wpm.c
 
 
 libfiles += $(bacnet)/ports/linux/bip-init.c 
