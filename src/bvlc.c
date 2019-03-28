@@ -398,8 +398,7 @@ int bvlc_bbmd_read_bdt(
     uint8_t mtu[MAX_MPDU] = { 0 };
     uint16_t mtu_len = 0;
     int rv = 0;
-    struct sockaddr_in bbmd;
-    memset(&bbmd, 0, sizeof(bbmd));
+    struct sockaddr_in bbmd = { 0 };
 
     mtu_len = bvlc_encode_read_bdt(mtu);
     if (mtu_len > 0) {
@@ -837,15 +836,13 @@ static bool bvlc_delete_foreign_device(
     uint8_t * pdu,
     uint16_t pdu_len)
 {
-    struct sockaddr_in sin;     /* the ip address */
+    struct sockaddr_in sin = { 0 };     /* the ip address */
     bool status = false;        /* return value */
     unsigned i = 0;
 
     if (pdu_len < 6) {
         return status;
     }
-    memset(&sin, 0, sizeof(sin));
-    
     bvlc_decode_bip_address(pdu, &sin.sin_addr, &sin.sin_port);
     for (i = 0; i < MAX_FD_ENTRIES; i++) {
         if (FD_Table[i].valid) {
@@ -879,8 +876,7 @@ int bvlc_send_mpdu(
     uint8_t * mtu,
     uint16_t mtu_len)
 {
-    struct sockaddr_in bvlc_dest;
-    memset(&bvlc_dest, 0, sizeof(bvlc_dest));
+    struct sockaddr_in bvlc_dest = { 0 };
 
     /* assumes that the driver has already been initialized */
     if (bip_socket() < 0) {
