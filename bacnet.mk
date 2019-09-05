@@ -10,7 +10,7 @@ bacnet := .
 
 CFLAGS += -g -I $(bacnet)/include -I $(bacnet)/ports/linux -I $(bacnet)/demo/object \
           -DPRINT_ENABLED=1 -DBACAPP_ALL -DBACDL_BIP=1 -DBBMD_ENABLED=1 -DMAX_ADDRESS_CACHE=1024  \
-          -DBACNET_VENDOR_NAME="\"Altair SmartEdge IoT Server(tm)\"" -DBACNET_VENDOR_ID=894
+          -DBACNET_VENDOR_NAME="\"Altair SmartEdge IoT Server(tm)\"" -DBACNET_VENDOR_ID=894 -DAUTO_PORT=1
 
 
 libfiles := $(filter-out $(bacnet)/src/mstp.c, $(wildcard $(bacnet)/src/*.c))
@@ -27,7 +27,7 @@ libfiles += $(bacnet)/demo/handler/h_whois.c   $(bacnet)/demo/handler/h_iam.c \
             $(bacnet)/demo/handler/dlenv.c     $(bacnet)/demo/handler/s_whois.c \
             $(bacnet)/demo/handler/s_router.c  $(bacnet)/demo/handler/s_cov.c \
             $(bacnet)/demo/handler/h_rpm.c     $(bacnet)/demo/handler/h_wp.c \
-            $(bacnet)/demo/handler/h_wpm.c
+            $(bacnet)/demo/handler/h_wpm.c     $(bacnet)/demo/handler/h_rp_a.c \
 
 
 libfiles += $(bacnet)/ports/linux/bip-init.c 

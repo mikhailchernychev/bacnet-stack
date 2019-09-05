@@ -40,6 +40,10 @@
 
 #include "candi_s.h"
 
+#ifdef AUTO_PORT
+    uint16_t getCustomBacnetLocalPort(void);
+#endif
+
 /** @file linux/bip-init.c  Initializes BACnet/IP interface (Linux). */
 
 bool BIP_Debug = false;
@@ -206,7 +210,13 @@ bool bip_init(
     /* bind the socket to the local port number and IP address */
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = htonl(INADDR_ANY);
+
+#ifdef AUTO_PORT
+    sin.sin_port =getCustomBacnetLocalPort();
+#else
     sin.sin_port = bip_get_port();
+#endif
+
     memset(&(sin.sin_zero), '\0', sizeof(sin.sin_zero));
     status =
         bind(sock_fd, (const struct sockaddr *) &sin, sizeof(struct sockaddr));
