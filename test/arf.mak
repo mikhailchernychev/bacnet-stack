@@ -18,18 +18,18 @@ OBJS = ${SRCS:.c=.o}
 TARGET = arf
 
 all: ${TARGET}
- 
+
 ${TARGET}: ${OBJS}
-	${CC} -o $@ ${OBJS} 
+	${CC} -o $@ ${OBJS}
 
 .c.o:
 	${CC} -c ${CFLAGS} $*.c -o $@
-	
+
 depend:
 	rm -f .depend
 	${CC} -MM ${CFLAGS} *.c >> .depend
-	
+
 clean:
-	rm -rf ${TARGET} $(OBJS) 
+	rm -rf ${TARGET} $(OBJS)
 
 include: .depend

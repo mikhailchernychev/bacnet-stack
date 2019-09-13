@@ -11,9 +11,9 @@ LOGFILE = test.log
 
 all: abort address arf awf bvlc6 bacapp bacdcode bacerror bacint bacstr \
 	cov crc datetime dcc event filename fifo getevent iam ihave \
-	indtext keylist key memcopy npdu ptransfer bacdevobjpropref \
-	rd reject ringbuf rp rpm sbuf timesync \
-	whohas whois wp objects
+	indtext keylist key memcopy npdu proplist ptransfer \
+	rd reject ringbuf rp rpm sbuf timesync vmac \
+	whohas whois wp objects lighting
 
 clean: logfile
 	rm ${LOGFILE}
@@ -50,11 +50,6 @@ bacdcode: logfile test/bacdcode.mak
 	$(MAKE) -s -C test -f bacdcode.mak clean all
 	( ./test/bacdcode >> ${LOGFILE} )
 	$(MAKE) -s -C test -f bacdcode.mak clean
-
-bacdevobjpropref: logfile test/bacdevobjpropref.mak
-	$(MAKE) -s -C test -f bacdevobjpropref.mak clean all
-	( ./test/bacdevobjpropref >> ${LOGFILE} )
-	$(MAKE) -s -C test -f bacdevobjpropref.mak clean
 
 bacerror: logfile test/bacerror.mak
 	$(MAKE) -s -C test -f bacerror.mak clean all
@@ -141,6 +136,11 @@ key: logfile test/key.mak
 	( ./test/key >> ${LOGFILE} )
 	$(MAKE) -s -C test -f key.mak clean
 
+lighting: logfile test/lighting.mak
+	$(MAKE) -s -C test -f lighting.mak clean all
+	( ./test/lighting >> ${LOGFILE} )
+	$(MAKE) -s -C test -f lighting.mak clean
+
 memcopy: logfile test/memcopy.mak
 	$(MAKE) -s -C test -f memcopy.mak clean all
 	( ./test/memcopy >> ${LOGFILE} )
@@ -150,6 +150,11 @@ npdu: logfile test/npdu.mak
 	$(MAKE) -s -C test -f npdu.mak clean all
 	( ./test/npdu >> ${LOGFILE} )
 	$(MAKE) -s -C test -f npdu.mak clean
+
+proplist: logfile test/proplist.mak
+	$(MAKE) -s -C test -f proplist.mak clean all
+	( ./test/proplist >> ${LOGFILE} )
+	$(MAKE) -s -C test -f proplist.mak clean
 
 ptransfer: logfile test/ptransfer.mak
 	$(MAKE) -s -C test -f ptransfer.mak clean all
@@ -211,8 +216,45 @@ wp: logfile test/wp.mak
 	( ./test/wp >> ${LOGFILE} )
 	$(MAKE) -s -C test -f wp.mak clean
 
-objects: ai ao av bi bo bv csv lc lo lso \
-	lsp mso msv ms-input osv piv schedule
+objects: ai ao av bi bo bv csv lc lo lso lsp \
+	mso msv ms-input netport osv piv command \
+	access_credential access_door access_point access_rights \
+	access_user access_zone credential_data_input
+
+access_credential: logfile demo/object/access_credential.mak
+	$(MAKE) -s -C demo/object -f access_credential.mak clean all
+	( ./demo/object/access_credential >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f access_credential.mak clean
+
+access_door: logfile demo/object/access_door.mak
+	$(MAKE) -s -C demo/object -f access_door.mak clean all
+	( ./demo/object/access_door >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f access_door.mak clean
+
+access_point: logfile demo/object/access_point.mak
+	$(MAKE) -s -C demo/object -f access_point.mak clean all
+	( ./demo/object/access_point >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f access_point.mak clean
+
+access_rights: logfile demo/object/access_rights.mak
+	$(MAKE) -s -C demo/object -f access_rights.mak clean all
+	( ./demo/object/access_rights >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f access_rights.mak clean
+
+access_user: logfile demo/object/access_user.mak
+	$(MAKE) -s -C demo/object -f access_user.mak clean all
+	( ./demo/object/access_user >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f access_user.mak clean
+
+access_zone: logfile demo/object/access_zone.mak
+	$(MAKE) -s -C demo/object -f access_zone.mak clean all
+	( ./demo/object/access_zone >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f access_zone.mak clean
+
+credential_data_input: logfile demo/object/credential_data_input.mak
+	$(MAKE) -s -C demo/object -f credential_data_input.mak clean all
+	( ./demo/object/credential_data_input >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f credential_data_input.mak clean
 
 ai: logfile demo/object/ai.mak
 	$(MAKE) -s -C demo/object -f ai.mak clean all
@@ -242,6 +284,11 @@ bv: logfile demo/object/bv.mak
 	$(MAKE) -s -C demo/object -f bv.mak clean all
 	( ./demo/object/binary_value >> ${LOGFILE} )
 	$(MAKE) -s -C demo/object -f bv.mak clean
+
+command: logfile demo/object/command.mak
+	$(MAKE) -s -C demo/object -f command.mak clean all
+	( ./demo/object/command >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f command.mak clean
 
 csv: logfile demo/object/csv.mak
 	$(MAKE) -s -C demo/object -f csv.mak clean all
@@ -292,6 +339,11 @@ osv: logfile demo/object/osv.mak
 	$(MAKE) -s -C demo/object -f osv.mak clean all
 	( ./demo/object/octetstring_value >> ${LOGFILE} )
 	$(MAKE) -s -C demo/object -f osv.mak clean
+
+netport: logfile demo/object/netport.mak
+	$(MAKE) -s -C demo/object -f netport.mak clean all
+	( ./demo/object/network_port >> ${LOGFILE} )
+	$(MAKE) -s -C demo/object -f netport.mak clean
 
 piv: logfile demo/object/piv.mak
 	$(MAKE) -s -C demo/object -f piv.mak clean all

@@ -28,13 +28,14 @@ SRCS := $(SRC_DIR)/bacdcode.c \
 	$(SRC_DIR)/bactext.c \
 	$(SRC_DIR)/indtext.c \
 	$(SRC_DIR)/datetime.c \
+	$(SRC_DIR)/lighting.c \
 	$(SRC_DIR)/timesync.c \
 	ctest.c
 
 OBJS := ${SRCS:.c=.o}
 
 all: ${TARGET}
- 
+
 ${TARGET}: ${OBJS}
 	${CC} -o $@ ${OBJS}
 

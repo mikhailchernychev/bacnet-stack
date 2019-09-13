@@ -255,6 +255,7 @@
           <state>BACAPP_ENUMERATED</state>
           <state>BACAPP_CHARACTER_STRING</state>
           <state>BACAPP_OBJECT_ID</state>
+          <state>WRITE_PROPERTY</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1152,7 +1153,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dlAVR-3s-ec_mul-sf-n.h</state>
+          <state>$TOOLKIT_DIR$\LIB\DLIB\dlAVR-1s-ec_mul-n.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
@@ -1165,7 +1166,7 @@
         </option>
         <option>
           <name>Input description</name>
-          <state>Full formatting.</state>
+          <state>Full formatting</state>
         </option>
         <option>
           <name>Output variant</name>
@@ -1174,7 +1175,7 @@
         </option>
         <option>
           <name>Output description</name>
-          <state> specifier a or A, no specifier n, no float or long long.</state>
+          <state>No specifier a, A, no specifier n, no float nor long long.</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
@@ -1229,7 +1230,7 @@
         </option>
         <option>
           <name>GenDeviceSelectMenu</name>
-          <state>m168	ATmega168</state>
+          <state>m8	ATmega8</state>
         </option>
       </data>
     </settings>
@@ -1258,7 +1259,6 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>NDEBUG</state>
           <state>BACDL_MSTP</state>
           <state>MAX_APDU=50</state>
           <state>BIG_ENDIAN=0</state>
@@ -1355,7 +1355,7 @@
         <option>
           <name>CCCrossCallPassesList</name>
           <version>8</version>
-          <state>1</state>
+          <state>5</state>
         </option>
         <option>
           <name>CCObjUseModuleName</name>
@@ -1367,7 +1367,7 @@
         </option>
         <option>
           <name>CCDebugInfo</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCNoErrorMsg</name>
@@ -1395,7 +1395,7 @@
         </option>
         <option>
           <name>CCCharIs</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCExt</name>
@@ -1565,7 +1565,7 @@
         </option>
         <option>
           <name>CDebug</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ADefines</name>
@@ -1686,7 +1686,7 @@
         </option>
         <option>
           <name>ANewIncludes</name>
-          <state>###Uninitialized###</state>
+          <state>$TOOLKIT_DIR$\INC\</state>
         </option>
         <option>
           <name>AsmMultiByteSupport</name>
@@ -1702,7 +1702,7 @@
         </option>
         <option>
           <name>AsmOutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.r90</state>
         </option>
         <option>
           <name>AStdIncCheck</name>
@@ -1744,12 +1744,12 @@
         </option>
         <option>
           <name>OutputFile</name>
-          <state>$PROJ_FNAME$.hex</state>
+          <state>$PROJ_FNAME$.d90</state>
         </option>
         <option>
           <name>OutputFormat</name>
           <version>11</version>
-          <state>23</state>
+          <state>70</state>
         </option>
         <option>
           <name>FormatVariant</name>
@@ -1856,7 +1856,7 @@
         </option>
         <option>
           <name>SuppressDiags</name>
-          <state></state>
+          <state>w31</state>
         </option>
         <option>
           <name>TreatAsWarn</name>
@@ -1882,13 +1882,11 @@
         </option>
         <option>
           <name>XExtraOptionsCheck</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>XExtraOptions</name>
-          <state>-y(CODE)</state>
-          <state>-Ointel-extended,(DATA)=$EXE_DIR$\$PROJ_FNAME$_data.hex</state>
-          <state>-Ointel-extended,(XDATA)=$EXE_DIR$\$PROJ_FNAME$_eeprom.hex</state>
+          <state></state>
         </option>
         <option>
           <name>IncludeSuppressed</name>
@@ -1904,7 +1902,7 @@
         </option>
         <option>
           <name>DebugInformation</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>RuntimeControl</name>
@@ -1916,7 +1914,7 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
@@ -2057,6 +2055,9 @@
       <name>$PROJ_DIR$\..\..\src\crc.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\src\iam.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\src\npdu.c</name>
     </file>
     <file>
@@ -2065,11 +2066,17 @@
     <file>
       <name>$PROJ_DIR$\..\..\src\rp.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\src\whois.c</name>
+    </file>
   </group>
   <group>
     <name>BACnet-Handlers</name>
     <file>
       <name>$PROJ_DIR$\..\..\demo\handler\h_npdu.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\demo\handler\h_rp.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\demo\handler\noserv.c</name>
@@ -2086,9 +2093,6 @@
   </file>
   <file>
     <name>$PROJ_DIR$\dlmstp.c</name>
-  </file>
-  <file>
-    <name>$PROJ_DIR$\h_rp.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>

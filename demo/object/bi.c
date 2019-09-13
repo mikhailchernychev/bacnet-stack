@@ -218,12 +218,12 @@ void Binary_Input_Change_Of_Value_Clear(
 }
 
 /**
- * Encode the Value List for Present-Value and Status-Flags
+ * For a given object instance-number, loads the value_list with the COV data.
  *
- * @param object_instance - object-instance number of the object
- * @param  value_list - #BACNET_PROPERTY_VALUE with at least 2 entries
+ * @param  object_instance - object-instance number of the object
+ * @param  value_list - list of COV data
  *
- * @return true if values were encoded
+ * @return  true if the value list is encoded
  */
 bool Binary_Input_Encode_Value_List(
     uint32_t object_instance,

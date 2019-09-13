@@ -97,6 +97,7 @@ static BACNET_DEVICE_STATUS System_Status = STATUS_OPERATIONAL;
 static BACNET_CHARACTER_STRING My_Object_Name;
 static uint32_t Database_Revision;
 static BACNET_REINITIALIZED_STATE Reinitialize_State = BACNET_REINIT_IDLE;
+static const char *Reinit_Password = "rehmite";
 
 /* These three arrays are used by the ReadPropertyMultiple handler */
 static const int Device_Properties_Required[] = {
@@ -279,28 +280,15 @@ bool Device_Write_Property(
     return status;
 }
 
-static unsigned property_list_count(
-    const int *pList)
-{
-    unsigned property_count = 0;
-
-    if (pList) {
-        while (*pList != -1) {
-            property_count++;
-            pList++;
-        }
-    }
-
-    return property_count;
-}
-
 /* for a given object type, returns the special property list */
 void Device_Objects_Property_List(
     BACNET_OBJECT_TYPE object_type,
+    uint32_t object_instance,
     struct special_property_list_t *pPropertyList)
 {
     struct my_object_functions *pObject = NULL;
 
+    (void)object_instance;
     pPropertyList->Required.pList = NULL;
     pPropertyList->Optional.pList = NULL;
     pPropertyList->Proprietary.pList = NULL;
@@ -392,15 +380,37 @@ bool Device_Reinitialize(
 {
     bool status = false;
 
-    if (characterstring_ansi_same(&rd_data->password, "rehmite")) {
-        Reinitialize_State = rd_data->state;
-        dcc_set_status_duration(COMMUNICATION_ENABLE, 0);
-        /* Note: you could use a mix of state
-           and password to multiple things */
-        /* note: you probably want to restart *after* the
-           simple ack has been sent from the return handler
-           so just set a flag from here */
-        status = true;
+    /* Note: you could use a mix of state and password to multiple things */
+    if (characterstring_ansi_same(&rd_data->password, Reinit_Password)) {
+        switch (rd_data->state) {
+            case BACNET_REINIT_COLDSTART:
+            case BACNET_REINIT_WARMSTART:
+                dcc_set_status_duration(COMMUNICATION_ENABLE, 0);
+                /* note: you probably want to restart *after* the
+                   simple ack has been sent from the return handler
+                   so just set a flag from here */
+                Reinitialize_State = rd_data->state;
+                status = true;
+                break;
+            case BACNET_REINIT_STARTBACKUP:
+            case BACNET_REINIT_ENDBACKUP:
+            case BACNET_REINIT_STARTRESTORE:
+            case BACNET_REINIT_ENDRESTORE:
+            case BACNET_REINIT_ABORTRESTORE:
+                if (dcc_communication_disabled()) {
+                    rd_data->error_class = ERROR_CLASS_SERVICES;
+                    rd_data->error_code = ERROR_CODE_COMMUNICATION_DISABLED;
+                } else {
+                    rd_data->error_class = ERROR_CLASS_SERVICES;
+                    rd_data->error_code =
+                        ERROR_CODE_OPTIONAL_FUNCTIONALITY_NOT_SUPPORTED;
+                }
+                break;
+            default:
+                rd_data->error_class = ERROR_CLASS_SERVICES;
+                rd_data->error_code = ERROR_CODE_PARAMETER_OUT_OF_RANGE;
+                break;
+        }
     } else {
         rd_data->error_class = ERROR_CLASS_SECURITY;
         rd_data->error_code = ERROR_CODE_PASSWORD_FAILURE;
@@ -648,7 +658,7 @@ int Device_Read_Property_Local(
         return 0;
     }
     apdu = rpdata->application_data;
-    switch ((int)rpdata->object_property) {
+    switch ((int) rpdata->object_property) {
         case PROP_DESCRIPTION:
             characterstring_init_ansi(&char_string, "BACnet Demo");
             apdu_len =
@@ -851,7 +861,7 @@ bool Device_Write_Property_Local(
         wp_data->error_code = ERROR_CODE_PROPERTY_IS_NOT_AN_ARRAY;
         return false;
     }
-    switch ((int)wp_data->object_property) {
+    switch ((int) wp_data->object_property) {
         case PROP_OBJECT_IDENTIFIER:
             if (value.tag == BACNET_APPLICATION_TAG_OBJECT_ID) {
                 if ((value.type.Object_Id.type == OBJECT_DEVICE) &&

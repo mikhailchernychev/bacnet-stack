@@ -48,12 +48,6 @@
     <ClCompile Include="..\..\..\..\demo\object\csv.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\demo\object\device-client.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\demo\object\device.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\demo\object\gw_device.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -82,6 +76,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\demo\object\trendlog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\demo\object\piv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\demo\object\schedule.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\demo\object\osv.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -37,6 +37,7 @@
 #include "bacdevobjpropref.h"
 #endif
 
+
 struct BACnet_Application_Data_Value;
 typedef struct BACnet_Application_Data_Value {
     bool context_specific;      /* true if context specific data */
@@ -133,6 +134,14 @@ typedef struct BACnet_Object_Property_Value {
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
+
+    void bacapp_value_list_init(
+        BACNET_APPLICATION_DATA_VALUE *value,
+        size_t count);
+    void bacapp_property_value_list_init(
+        BACNET_PROPERTY_VALUE *value,
+        size_t count);
+
     int bacapp_encode_data(
         uint8_t * apdu,
         BACNET_APPLICATION_DATA_VALUE * value);

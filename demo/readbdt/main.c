@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <time.h>       /* for time */
 #include <errno.h>
+#include <ctype.h>      /* for toupper */
 #include "bactext.h"
 #include "iam.h"
 #include "address.h"
@@ -41,7 +42,9 @@
 #include "datalink.h"
 #include "bvlc.h"
 /* some demo stuff needed */
+#ifndef DEBUG_ENABLED
 #define DEBUG_ENABLED 0
+#endif
 #include "debug.h"
 #include "filename.h"
 #include "handlers.h"

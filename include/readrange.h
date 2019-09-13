@@ -161,8 +161,10 @@ extern "C" {
 /** @defgroup Trend Trending BIBBs
  * These BIBBs prescribe the BACnet capabilities required to interoperably
  * perform the trending functions enumerated in clause 22.2.1.4 for the
- * BACnet devices defined therein.
-*//** @defgroup TrendReadRange Trending -Read Range Service (eg, in T-VMT)
+     * BACnet devices defined therein.
+*/
+
+/** @defgroup TrendReadRange Trending -Read Range Service (eg, in T-VMT)
  * @ingroup Trend
  * 15.8 ReadRange Service <br>
  * The ReadRange service is used by a client BACnet-user to read a specific

@@ -63,6 +63,7 @@ static const int Properties_Required[] = {
 static const int Properties_Optional[] = {
     PROP_EVENT_STATE,
     PROP_OUT_OF_SERVICE,
+    PROP_DESCRIPTION,
     -1
 };
 
@@ -92,6 +93,10 @@ void CharacterString_Value_Init(
 
     /* initialize all Present Values */
     for (i = 0; i < MAX_CHARACTERSTRING_VALUES; i++) {
+        snprintf(&Object_Name[i][0], sizeof(Object_Name[i]),
+            "CHARACTER STRING VALUE %u", i+1);
+        snprintf(&Object_Description[i][0], sizeof(Object_Description[i]),
+            "A Character String Value Example");
         characterstring_init_ansi(&Present_Value[i], "");
     }
 

@@ -226,7 +226,7 @@ extern "C" {
 
     bool Device_Reinitialize(
         BACNET_REINITIALIZE_DEVICE_DATA * rd_data);
-
+    bool Device_Reinitialize_State_Set(BACNET_REINITIALIZED_STATE state);
     BACNET_REINITIALIZED_STATE Device_Reinitialized_State(
         void);
 
@@ -235,7 +235,10 @@ extern "C" {
 
     void Device_getCurrentDateTime(
         BACNET_DATE_TIME * DateTime);
+
     int32_t Device_UTC_Offset(void);
+    void Device_UTC_Offset_Set(int16_t offset);
+
     bool Device_Daylight_Savings_Status(void);
     bool Device_Align_Intervals(void);
     bool Device_Align_Intervals_Set(bool flag);
@@ -250,6 +253,7 @@ extern "C" {
         const int **pProprietary);
     void Device_Objects_Property_List(
         BACNET_OBJECT_TYPE object_type,
+        uint32_t object_instance,
         struct special_property_list_t *pPropertyList);
     /* functions to support COV */
     bool Device_Encode_Value_List(
@@ -293,7 +297,8 @@ extern "C" {
         BACNET_OBJECT_TYPE object_type,
         uint32_t object_instance,
         BACNET_CHARACTER_STRING * object_name);
-    bool Device_Object_Name_ANSI_Init(const char * value);
+    bool Device_Object_Name_ANSI_Init(const char * object_name);
+    char * Device_Object_Name_ANSI(void);
 
     BACNET_DEVICE_STATUS Device_System_Status(
         void);
@@ -449,11 +454,11 @@ extern "C" {
  *  - The interface between the implemented Objects and the BAC-stack services,
  *    specifically the handlers, which are mediated through function calls to
  *    the Device object.
- *//** @defgroup ObjHelpers Object Helper Functions
+    *//** @defgroup ObjHelpers Object Helper Functions
  * @ingroup ObjFrmwk
  * This section describes the function templates for the helper functions that
  * provide common object support.
- *//** @defgroup ObjIntf Handler-to-Object Interface Functions
+    *//** @defgroup ObjIntf Handler-to-Object Interface Functions
  * @ingroup ObjFrmwk
  * This section describes the fairly limited set of functions that link the
  * BAC-stack handlers to the BACnet Object instances.  All of these calls are

@@ -183,20 +183,20 @@ static void Initialize_Device_Addresses(
     uint32_t virtual_mac = 0;
     DEVICE_OBJECT_DATA *pDev = NULL;
     /* Setup info for the main gateway device first */
+    pDev = Get_Routed_Device_Object(i);
 #if defined(BACDL_BIP)
     uint16_t myPort;
     struct in_addr *netPtr;     /* Lets us cast to this type */
     uint8_t *gatewayMac = NULL;
     uint32_t myAddr = bip_get_addr();
-    pDev = Get_Routed_Device_Object(i);
     gatewayMac = pDev->bacDevAddr.mac;  /* Keep pointer to the main MAC */
     memcpy(pDev->bacDevAddr.mac, &myAddr, 4);
     myPort = bip_get_port();
     memcpy(&pDev->bacDevAddr.mac[4], &myPort, 2);
     pDev->bacDevAddr.mac_len = 6;
 #elif defined(BACDL_MSTP)
-    /* Todo: */
-    pDev->bacDevAddr.mac_len = 2;
+    pDev->bacDevAddr.mac_len = 1;
+    pDev->bacDevAddr.mac[0] = dlmstp_mac_address();
 #else
 #error "No support for this Data Link Layer type "
 #endif
@@ -330,9 +330,9 @@ int main(
             dlenv_maintenance_timer(elapsed_seconds);
             Load_Control_State_Machine_Handler();
             elapsed_milliseconds = elapsed_seconds * 1000;
-            handler_cov_task();
             tsm_timer_milliseconds(elapsed_milliseconds);
         }
+        handler_cov_task();
         /* output */
 
         /* blink LEDs, Turn on or off outputs, etc */

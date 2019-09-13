@@ -109,6 +109,15 @@ extern "C" {
     void address_cache_timer(
         uint16_t uSeconds);
 
+    void address_mac_init(
+        BACNET_MAC_ADDRESS *mac,
+        uint8_t *adr,
+        uint8_t len);
+
+    bool address_mac_from_ascii(
+        BACNET_MAC_ADDRESS *mac,
+        char *arg);
+
     void address_protected_entry_index_set(uint32_t top_protected_entry_index);
     void address_own_device_id_set(uint32_t own_id);
 

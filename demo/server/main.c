@@ -45,6 +45,7 @@
 #include "bacfile.h"
 #include "datalink.h"
 #include "dcc.h"
+#include "filename.h"
 #include "getevent.h"
 #include "net.h"
 #include "txbuf.h"
@@ -59,6 +60,9 @@
 #if defined(BACFILE)
 #include "bacfile.h"
 #endif /* defined(BACFILE) */
+#if defined(BAC_UCI)
+#include "ucix.h"
+#endif /* defined(BAC_UCI) */
 
 
 /** @file server/main.c  Example server application using the BACnet Stack. */
@@ -81,8 +85,21 @@ static void Init_Service_Handlers(
     /* we need to handle who-is to support dynamic device binding */
     apdu_set_unconfirmed_handler(SERVICE_UNCONFIRMED_WHO_IS, handler_who_is);
     apdu_set_unconfirmed_handler(SERVICE_UNCONFIRMED_WHO_HAS, handler_who_has);
+
+#if 0
+	/* 	BACnet Testing Observed Incident oi00107
+		Server only devices should not indicate that they EXECUTE I-Am
+		Revealed by BACnet Test Client v1.8.16 ( www.bac-test.com/bacnet-test-client-download )
+			BITS: BIT00040
+		Any discussions can be directed to edward@bac-test.com
+		Please feel free to remove this comment when my changes accepted after suitable time for
+		review by all interested parties. Say 6 months -> September 2016 */
+	/* In this demo, we are the server only ( BACnet "B" device ) so we do not indicate
+	   that we can execute the I-Am message */
     /* handle i-am to support binding to other devices */
     apdu_set_unconfirmed_handler(SERVICE_UNCONFIRMED_I_AM, handler_i_am_bind);
+#endif
+
     /* set the handler for all the services we don't implement */
     /* It is required to send the proper reject message... */
     apdu_set_unrecognized_service_handler_handler
@@ -129,6 +146,30 @@ static void Init_Service_Handlers(
     apdu_set_confirmed_handler(SERVICE_CONFIRMED_GET_ALARM_SUMMARY,
         handler_get_alarm_summary);
 #endif /* defined(INTRINSIC_REPORTING) */
+#if defined(BACNET_TIME_MASTER)
+    handler_timesync_init();
+#endif
+}
+
+static void print_usage(const char *filename)
+{
+    printf("Usage: %s [device-instance [device-name]]\n", filename);
+    printf("       [--version][--help]\n");
+}
+
+static void print_help(const char *filename)
+{
+    printf("Simulate a BACnet server device\n"
+        "device-instance:\n"
+        "BACnet Device Object Instance number that you are\n"
+        "trying simulate.\n"
+        "device-name:\n"
+        "The Device object-name is the text name for the device.\n"
+        "\nExample:\n");
+    printf("To simulate Device 123, use the following command:\n"
+        "%s 123\n", filename);
+    printf("To simulate Device 123 named Fred, use following command:\n"
+        "%s 123 Fred\n", filename);
 }
 
 /** Main function of server demo.
@@ -158,10 +199,54 @@ int main(
     uint32_t elapsed_milliseconds = 0;
     uint32_t address_binding_tmr = 0;
     uint32_t recipient_scan_tmr = 0;
+#if defined(BACNET_TIME_MASTER)
+    BACNET_DATE_TIME bdatetime;
+#endif
+#if defined(BAC_UCI)
+    int uciId = 0;
+    struct uci_context *ctx;
+#endif
+    int argi = 0;
+    const char *filename = NULL;
 
-    /* allow the device ID to be set */
-    if (argc > 1)
-        Device_Set_Object_Instance_Number(strtol(argv[1], NULL, 0));
+    filename = filename_remove_path(argv[0]);
+    for (argi = 1; argi < argc; argi++) {
+        if (strcmp(argv[argi], "--help") == 0) {
+            print_usage(filename);
+            print_help(filename);
+            return 0;
+        }
+        if (strcmp(argv[argi], "--version") == 0) {
+            printf("%s %s\n", filename, BACNET_VERSION_TEXT);
+            printf("Copyright (C) 2014 by Steve Karg and others.\n"
+                "This is free software; see the source for copying conditions.\n"
+                "There is NO warranty; not even for MERCHANTABILITY or\n"
+                "FITNESS FOR A PARTICULAR PURPOSE.\n");
+            return 0;
+        }
+    }
+#if defined(BAC_UCI)
+    ctx = ucix_init("bacnet_dev");
+    if (!ctx)
+        fprintf(stderr, "Failed to load config file bacnet_dev\n");
+    uciId = ucix_get_option_int(ctx, "bacnet_dev", "0", "Id", 0);
+    printf("ID: %i", uciId);
+    if (uciId != 0) {
+        Device_Set_Object_Instance_Number(uciId);
+    } else {
+#endif /* defined(BAC_UCI) */
+        /* allow the device ID to be set */
+        if (argc > 1) {
+            Device_Set_Object_Instance_Number(strtol(argv[1], NULL, 0));
+        }
+        if (argc > 2) {
+            Device_Object_Name_ANSI_Init(argv[2]);
+        }
+#if defined(BAC_UCI)
+    }
+    ucix_cleanup(ctx);
+#endif /* defined(BAC_UCI) */
+
     printf("BACnet Server Demo\n" "BACnet Stack Version %s\n"
         "BACnet Device ID: %u\n" "Max APDU: %d\n", BACnet_Version,
         Device_Object_Instance_Number(), MAX_APDU);
@@ -203,6 +288,10 @@ int main(
             trend_log_timer(elapsed_seconds);
 #if defined(INTRINSIC_REPORTING)
             Device_local_reporting();
+#endif
+#if defined(BACNET_TIME_MASTER)
+            Device_getCurrentDateTime(&bdatetime);
+            handler_timesync_task(&bdatetime);
 #endif
         }
         handler_cov_task();

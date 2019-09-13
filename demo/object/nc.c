@@ -21,7 +21,13 @@
 * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 *
+*   Additional changes, Copyright (c) 2018 Ed Hague <edward@bac-test.com>
+*
+*   2018.06.17 -    Attempting to write to Object_Name returned UNKNOWN_PROPERTY.
+*                   Now returns WRITE_ACCESS_DENIED
+*
 *********************************************************************/
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -392,9 +398,10 @@ bool Notification_Class_Write_Property(
     NOTIFICATION_CLASS_INFO *CurrentNotify;
     NOTIFICATION_CLASS_INFO TmpNotify;
     BACNET_APPLICATION_DATA_VALUE value;
+    uint8_t TmpPriority[MAX_BACNET_EVENT_TRANSITION];  /* BACnetARRAY[3] of Unsigned */
     bool status = false;
-    int iOffset = 0;
-    uint8_t idx = 0;
+    int iOffset;
+    uint8_t idx;
     int len = 0;
 
 
@@ -403,8 +410,7 @@ bool Notification_Class_Write_Property(
         &NC_Info[Notification_Class_Instance_To_Index(wp_data->
             object_instance)];
 
-    /* decode the some of the request
-     */
+    /* decode some of the request */
     len =
         bacapp_decode_application_data(wp_data->application_data,
         wp_data->application_data_len, &value);
@@ -431,14 +437,50 @@ bool Notification_Class_Write_Property(
                 if (wp_data->array_index == 0) {
                     wp_data->error_class = ERROR_CLASS_PROPERTY;
                     wp_data->error_code = ERROR_CODE_INVALID_ARRAY_INDEX;
+                    status = false;
                 } else if (wp_data->array_index == BACNET_ARRAY_ALL) {
-                    /* FIXME: wite all array */
+                    iOffset = 0;
+                    for (idx = 0; idx < MAX_BACNET_EVENT_TRANSITION; idx++)
+                    {
+                        len =
+                            bacapp_decode_application_data(&wp_data->
+                            application_data[iOffset], wp_data->application_data_len,
+                            &value);
+                        if ((len == 0) ||
+                                (value.tag != BACNET_APPLICATION_TAG_UNSIGNED_INT))
+                        {
+                            /* Bad decode, wrong tag or following required parameter missing */
+                            wp_data->error_class = ERROR_CLASS_PROPERTY;
+                            wp_data->error_code = ERROR_CODE_INVALID_DATA_TYPE;
+                            status = false;
+                            break;
+                        }
+                        if (value.type.Unsigned_Int > 255) {
+                            wp_data->error_class = ERROR_CLASS_PROPERTY;
+                            wp_data->error_code = ERROR_CODE_VALUE_OUT_OF_RANGE;
+                            status = false;
+                            break;
+                        }
+						TmpPriority[idx] = (uint8_t) value.type.Unsigned_Int;
+                        iOffset += len;
+                    }
+                    if (status == true) {
+                        for (idx = 0; idx < MAX_BACNET_EVENT_TRANSITION; idx++)
+                            CurrentNotify->Priority[idx] = TmpPriority[idx];	
+                    }
                 } else if (wp_data->array_index <= 3) {
+                    if (value.type.Unsigned_Int > 255) {
+                        wp_data->error_class = ERROR_CLASS_PROPERTY;
+                        wp_data->error_code = ERROR_CODE_VALUE_OUT_OF_RANGE;
+                        status = false;
+                      }
+                      else
                     CurrentNotify->Priority[wp_data->array_index - 1] =
                         value.type.Unsigned_Int;
                 } else {
                     wp_data->error_class = ERROR_CLASS_PROPERTY;
                     wp_data->error_code = ERROR_CODE_INVALID_ARRAY_INDEX;
+                    status = false;
                 }
             }
             break;
@@ -462,7 +504,8 @@ bool Notification_Class_Write_Property(
         case PROP_RECIPIENT_LIST:
 
             memset(&TmpNotify, 0x00, sizeof(NOTIFICATION_CLASS_INFO));
-
+            idx = 0;
+            iOffset = 0;
             /* decode all packed */
             while (iOffset < wp_data->application_data_len) {
                 /* Decode Valid Days */
@@ -717,6 +760,9 @@ bool Notification_Class_Write_Property(
 
             status = true;
 
+        case PROP_OBJECT_NAME:
+            wp_data->error_class = ERROR_CLASS_PROPERTY;
+            wp_data->error_code = ERROR_CODE_WRITE_ACCESS_DENIED;
             break;
 
         default:

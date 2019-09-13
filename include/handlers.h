@@ -31,6 +31,8 @@
 #include "bacdef.h"
 #include "apdu.h"
 #include "bacapp.h"
+#include "ptransfer.h"
+#include "npdu.h"
 #include "rd.h"
 #include "rp.h"
 #include "rpm.h"
@@ -55,6 +57,25 @@ extern "C" {
         BACNET_ADDRESS * src,   /* source address */
         uint8_t * pdu,  /* PDU data */
         uint16_t pdu_len);      /* length PDU  */
+
+    void npdu_handler_cleanup(void);
+    void npdu_handler_init(
+        uint16_t bip_net,
+        uint16_t mstp_net);
+    void npdu_router_handler(
+        uint16_t snet,
+        BACNET_ADDRESS * src,
+        uint8_t * pdu,
+        uint16_t pdu_len);
+    int npdu_router_send_pdu(
+        uint16_t dnet,
+        BACNET_ADDRESS * dest,
+        BACNET_NPDU_DATA * npdu_data,
+        uint8_t * pdu,
+        unsigned int pdu_len);
+    void npdu_router_get_my_address(
+        uint16_t dnet,
+        BACNET_ADDRESS * my_address);
 
     void routing_npdu_handler(
         BACNET_ADDRESS * src,
@@ -170,6 +191,7 @@ extern "C" {
         BACNET_CONFIRMED_SERVICE_DATA * service_data);
     void handler_dcc_password_set(
         char *new_password);
+    char *handler_dcc_password(void);
 
     void handler_i_have(
         uint8_t * service_request,
@@ -190,8 +212,7 @@ extern "C" {
         uint8_t * apdu,
         int max_apdu);
     void handler_timesync_task(BACNET_DATE_TIME *bdatetime);
-    void handler_timesync_init(
-        void);
+    void handler_timesync_init(void);
     bool handler_timesync_recipient_write(
         BACNET_WRITE_PROPERTY_DATA * wp_data);
     uint32_t handler_timesync_interval(void);
@@ -224,6 +245,8 @@ extern "C" {
     /* print the RP Ack data to stdout */
     void rp_ack_print_data(
         BACNET_READ_PROPERTY_DATA * data);
+    /* print the GE Ack data to stdout */
+    void ge_ack_print_data(BACNET_GET_EVENT_INFORMATION_DATA * data, uint32_t device_id);
     /* print the RPM Ack data to stdout */
     void rpm_ack_print_data(
         BACNET_READ_ACCESS_DATA * rpm_data);
@@ -288,6 +311,9 @@ extern "C" {
         uint16_t service_len,
         BACNET_ADDRESS * src);
 
+    void private_transfer_print_data(
+        BACNET_PRIVATE_TRANSFER_DATA *private_data);
+
     void handler_read_range(
         uint8_t * service_request,
         uint16_t service_len,
@@ -325,6 +351,12 @@ extern "C" {
         uint16_t service_len,
         BACNET_ADDRESS * src,
         BACNET_CONFIRMED_SERVICE_ACK_DATA * service_data);
+
+    void get_event_ack_handler(
+        uint8_t *service_request,
+        uint16_t service_len,
+        BACNET_ADDRESS *src,
+        BACNET_CONFIRMED_SERVICE_ACK_DATA *service_data);
 
 
 #ifdef __cplusplus

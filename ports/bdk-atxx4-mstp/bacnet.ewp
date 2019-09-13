@@ -3,7 +3,7 @@
 <project>
   <fileVersion>2</fileVersion>
   <configuration>
-    <name>Debug-1284p</name>
+    <name>Debug</name>
     <toolchain>
       <name>AVR</name>
     </toolchain>
@@ -26,15 +26,15 @@
         </option>
         <option>
           <name>ExePath</name>
-          <state>Debug-1284p\Exe</state>
+          <state>Debug\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>Debug-1284p\Obj</state>
+          <state>Debug\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>Debug-1284p\List</state>
+          <state>Debug\List</state>
         </option>
         <option>
           <name>GGEnableConfig</name>
@@ -727,7 +727,7 @@
       <name>XLINK</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -986,11 +986,6 @@
           <name>CrcInitialValue</name>
           <state>0x00</state>
         </option>
-        <option>
-          <name>CrcUnitSize</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -1021,18 +1016,18 @@
     </settings>
   </configuration>
   <configuration>
-    <name>Debug-644p</name>
+    <name>Release</name>
     <toolchain>
       <name>AVR</name>
     </toolchain>
-    <debug>1</debug>
+    <debug>0</debug>
     <settings>
       <name>General</name>
       <archiveVersion>11</archiveVersion>
       <data>
         <version>9</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
+        <debug>0</debug>
         <option>
           <name>GGEnhancedCore</name>
           <state>1</state>
@@ -1044,15 +1039,15 @@
         </option>
         <option>
           <name>ExePath</name>
-          <state>Debug-644p\Exe</state>
+          <state>Release\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>Debug-644p\Obj</state>
+          <state>Release\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>Debug-644p\List</state>
+          <state>Release\List</state>
         </option>
         <option>
           <name>GGEnableConfig</name>
@@ -1141,7 +1136,7 @@
         </option>
         <option>
           <name>GGEepromUtilSize</name>
-          <state>2048</state>
+          <state>4096</state>
         </option>
         <option>
           <name>GRuntimeLibSelect</name>
@@ -1158,7 +1153,7 @@
         </option>
         <option>
           <name>RTConfigPath</name>
-          <state>$TOOLKIT_DIR$\LIB\DLIB\dlAVR-3s-ec_mul-sf-n.h</state>
+          <state>$TOOLKIT_DIR$\LIB\DLIB\dlAVR-3s-ec_mul-n.h</state>
         </option>
         <option>
           <name>RTLibraryPath</name>
@@ -1167,11 +1162,11 @@
         <option>
           <name>Input variant</name>
           <version>36</version>
-          <state>6</state>
+          <state>1</state>
         </option>
         <option>
           <name>Input description</name>
-          <state>No specifier n, no float nor long long, no scan set, no assignment suppressing.</state>
+          <state>Full formatting</state>
         </option>
         <option>
           <name>Output variant</name>
@@ -1235,7 +1230,7 @@
         </option>
         <option>
           <name>GenDeviceSelectMenu</name>
-          <state>m644p	ATmega644P</state>
+          <state>m1284p	ATmega1284P</state>
         </option>
       </data>
     </settings>
@@ -1245,7 +1240,7 @@
       <data>
         <version>17</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
+        <debug>0</debug>
         <option>
           <name>CCVariantProcessor</name>
           <state>0</state>
@@ -1264,9 +1259,9 @@
         </option>
         <option>
           <name>CCDefines</name>
+          <state>NDEBUG</state>
           <state>BACDL_MSTP</state>
-          <state>MAX_ANALOG_INPUTS=100</state>
-          <state>MAX_APDU=50</state>
+          <state>MAX_APDU=128</state>
           <state>BIG_ENDIAN=0</state>
           <state>MAX_TSM_TRANSACTIONS=0</state>
           <state>MSTP_PDU_PACKET_COUNT=2</state>
@@ -1306,7 +1301,7 @@
         </option>
         <option>
           <name>CCListAssFile</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>CCListAssSource</name>
@@ -1360,7 +1355,7 @@
         <option>
           <name>CCAllowList</name>
           <version>3</version>
-          <state>000000</state>
+          <state>111111</state>
         </option>
         <option>
           <name>CCCrossCallPassesList</name>
@@ -1540,7 +1535,7 @@
       <data>
         <version>11</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
+        <debug>0</debug>
         <option>
           <name>IProcessor</name>
           <state>0</state>
@@ -1575,7 +1570,7 @@
         </option>
         <option>
           <name>CDebug</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>ADefines</name>
@@ -1696,7 +1691,7 @@
         </option>
         <option>
           <name>ANewIncludes</name>
-          <state>$TOOLKIT_DIR$\INC\</state>
+          <state>###Uninitialized###</state>
         </option>
         <option>
           <name>AsmMultiByteSupport</name>
@@ -1712,7 +1707,7 @@
         </option>
         <option>
           <name>AsmOutputFile</name>
-          <state>$FILE_BNAME$.r90</state>
+          <state></state>
         </option>
         <option>
           <name>AStdIncCheck</name>
@@ -1745,9 +1740,9 @@
       <name>XLINK</name>
       <archiveVersion>2</archiveVersion>
       <data>
-        <version>14</version>
+        <version>13</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
+        <debug>0</debug>
         <option>
           <name>XOutOverride</name>
           <state>0</state>
@@ -1820,7 +1815,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\src\template\cfgm1284p.xcl</state>
+          <state>$TOOLKIT_DIR$\src\template\cfgm644p.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -2004,11 +1999,6 @@
           <name>CrcInitialValue</name>
           <state>0x00</state>
         </option>
-        <option>
-          <name>CrcUnitSize</name>
-          <version>0</version>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -2017,7 +2007,7 @@
       <data>
         <version>0</version>
         <wantNonLocal>1</wantNonLocal>
-        <debug>1</debug>
+        <debug>0</debug>
         <option>
           <name>XAROutOverride</name>
           <state>0</state>

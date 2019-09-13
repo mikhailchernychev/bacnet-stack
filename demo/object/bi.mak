@@ -17,6 +17,7 @@ SRCS = bi.c \
 	$(SRC_DIR)/bactext.c \
 	$(SRC_DIR)/indtext.c \
 	$(SRC_DIR)/datetime.c \
+	$(SRC_DIR)/lighting.c \
 	$(TEST_DIR)/ctest.c
 
 TARGET = binary_input

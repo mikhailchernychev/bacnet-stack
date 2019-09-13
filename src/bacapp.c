@@ -46,6 +46,7 @@
 #include "bactext.h"
 #include "datetime.h"
 #include "bacstr.h"
+#include "lighting.h"
 
 /** @file bacapp.c  Utilities for the BACnet_Application_Data_Value */
 
@@ -682,6 +683,15 @@ BACNET_APPLICATION_TAG bacapp_context_tag_type(
                 case 0:        /* Device Object ID */
                     tag = BACNET_APPLICATION_TAG_OBJECT_ID;
                     break;
+                case 1:
+                    /* 2015.08.22 EKH 135-2012 pg 708
+                    todo - Context 1 in Recipient list would be a BACnetAddress, not coded yet...
+                    BACnetRecipient::= CHOICE {
+                         device  [0] BACnetObjectIdentifier,
+                         address  [1] BACnetAddress
+                          }
+                          */
+                    break;
                 default:
                     break;
             }
@@ -1005,7 +1015,7 @@ static bool append_str(
     const char *add_str)
 {
     bool retval;
-    uint16_t bytes_written;
+    int bytes_written;
 
     bytes_written = snprintf(*str, *rem_str_len, "%s", add_str);
     if ((bytes_written < 0) || (bytes_written >= *rem_str_len)) {
@@ -1139,6 +1149,17 @@ int bacapp_snprintf_value(
                 break;
             case BACNET_APPLICATION_TAG_ENUMERATED:
                 switch (property) {
+                    case PROP_PROPERTY_LIST:
+                        char_str = (char *) bactext_property_name_default(
+                            value->type.Enumerated, NULL);
+                        if (char_str) {
+                            ret_val = snprintf(str, str_len, "%s", char_str);
+                        } else {
+                            ret_val =
+                                snprintf(str, str_len, "%lu",
+                                (unsigned long) value->type.Enumerated);
+                        }
+                        break;
                     case PROP_OBJECT_TYPE:
                         if (value->type.Enumerated < MAX_ASHRAE_OBJECT_TYPE) {
                             ret_val =
@@ -1339,6 +1360,21 @@ int bacapp_snprintf_value(
                 /* bytes were written. */
                 ret_val = str_len - rem_str_len;
                 break;
+            case BACNET_APPLICATION_TAG_LIGHTING_COMMAND:
+                if (!append_str(&p_str, &rem_str_len, "("))
+                    break;
+                if (!append_str(&p_str, &rem_str_len,
+                        bactext_lighting_operation_name(value->type.
+                            Lighting_Command.operation))) {
+                    break;
+                }
+                /* FIXME: add the Lighting Command optional values */
+                if (!append_str(&p_str, &rem_str_len, ")"))
+                    break;
+                /* If we get here, then everything is OK. Indicate how many */
+                /* bytes were written. */
+                ret_val = str_len - rem_str_len;
+                break;
             default:
                 ret_val = 0;
                 break;
@@ -1372,7 +1408,7 @@ bool bacapp_print_value(
         /* Try to extract the value into allocated memory. If unable, try again */
         /* another time with a string that is twice as large. */
         status = bacapp_snprintf_value(str, str_len, object_value);
-        if ((status < 0) || (status >= str_len)) {
+        if ((status < 0) || ((size_t)status >= str_len)) {
             free(str);
             str_len *= 2;
         } else if (status == 0) {
@@ -1506,6 +1542,9 @@ bool bacapp_parse_application_data(
                     status = false;
                 }
                 break;
+            case BACNET_APPLICATION_TAG_LIGHTING_COMMAND:
+                /* FIXME: add parsing for lighting command */
+                break;
             default:
                 break;
         }
@@ -1515,6 +1554,61 @@ bool bacapp_parse_application_data(
     return status;
 }
 #endif
+
+/**
+ * Initialize an array (or single) #BACNET_APPLICATION_DATA_VALUE
+ *
+ * @param value - one or more #BACNET_APPLICATION_DATA_VALUE elements
+ * @param count - number of #BACNET_APPLICATION_DATA_VALUE elements
+ */
+void bacapp_value_list_init(
+    BACNET_APPLICATION_DATA_VALUE *value,
+    size_t count)
+{
+    size_t i = 0;
+
+    if (value && count) {
+        for (i = 0; i < count; i++) {
+            value->tag = BACNET_APPLICATION_TAG_NULL;
+            value->context_specific = 0;
+            value->context_tag = 0;
+            if ((i+1) < count) {
+                value->next = value + 1;
+            } else {
+                value->next = NULL;
+            }
+            value++;
+        }
+    }
+}
+
+/**
+ * Initialize an array (or single) #BACNET_PROPERTY_VALUE
+ *
+ * @param value - one or more #BACNET_PROPERTY_VALUE elements
+ * @param count - number of #BACNET_PROPERTY_VALUE elements
+ */
+void bacapp_property_value_list_init(
+    BACNET_PROPERTY_VALUE *value,
+    size_t count)
+{
+    size_t i = 0;
+
+    if (value && count) {
+        for (i = 0; i < count; i++) {
+            value->propertyIdentifier = MAX_BACNET_PROPERTY_ID;
+            value->propertyArrayIndex = BACNET_ARRAY_ALL;
+            value->priority = BACNET_NO_PRIORITY;
+            bacapp_value_list_init(&value->value, 1);
+            if ((i+1) < count) {
+                value->next = value + 1;
+            } else {
+                value->next = NULL;
+            }
+            value++;
+        }
+    }
+}
 
 #ifdef TEST
 #include <assert.h>

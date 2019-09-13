@@ -15,8 +15,14 @@ MY_BACNET_DEFINES = -DPRINT_ENABLED=1
 MY_BACNET_DEFINES += -DBACAPP_ALL
 MY_BACNET_DEFINES += -DBACFILE
 MY_BACNET_DEFINES += -DINTRINSIC_REPORTING
+MY_BACNET_DEFINES += -DBACNET_TIME_MASTER
 MY_BACNET_DEFINES += -DBACNET_PROPERTY_LISTS=1
+MY_BACNET_DEFINES += -DBACNET_PROTOCOL_REVISION=17
 BACNET_DEFINES ?= $(MY_BACNET_DEFINES)
+
+# un-comment the next line to build in uci integration
+#BACNET_DEFINES += -DBAC_UCI
+#UCI_LIB_DIR ?= /usr/local/lib
 
 #BACDL_DEFINE=-DBACDL_ETHERNET=1
 #BACDL_DEFINE=-DBACDL_ARCNET=1
@@ -55,36 +61,63 @@ CFLAGS  = $(WARNINGS) $(DEBUGGING) $(OPTIMIZATION) $(STANDARDS) $(INCLUDES) $(DE
 # (see http://www.gnu.org/software/automake/manual/make/Special-Targets.html)
 .EXPORT_ALL_VARIABLES:
 
-all: library demos
-.PHONY : all library demos clean
+all: library demos router-ipv6 ${DEMO_LINUX}
+.PHONY : all library demos router gateway router-ipv6 clean
 
 library:
 	$(MAKE) -s -C lib all
 
 demos:
-	$(MAKE) -s -C demo all
+	$(MAKE) -C demo all
 
 gateway:
 	$(MAKE) -B -s -C demo gateway
 
-mstpcap:
-	$(MAKE) -B -s -C demo mstpcap
+server:
+	$(MAKE) -j -B -C demo server
 
-router:
+mstpcap:
+	$(MAKE) -B -C demo mstpcap
+
+mstpcrc: library
+	$(MAKE) -B -C demo mstpcrc
+
+iam:
+	$(MAKE) -B -C demo iam
+
+uevent:
+	$(MAKE) -B -C demo uevent
+
+writepropm:
+	$(MAKE) -s -B -C demo writepropm
+
+abort:
+	$(MAKE) -B -C demo abort
+
+error:
+	$(MAKE) -B -C demo error
+
+router: library
 	$(MAKE) -s -C demo router
 
-router-ipv6:
+router-ipv6: library
 	$(MAKE) -B -s -C demo router-ipv6
 
 # Add "ports" to the build, if desired
-ports:	atmega168 bdk-atxx4-mstp at91sam7s
+ports:	atmega168 bdk-atxx4-mstp at91sam7s stm32f10x
 	@echo "Built the ARM7 and AVR ports"
 
 atmega168: ports/atmega168/Makefile
 	$(MAKE) -s -C ports/atmega168 clean all
 
-at91sam7s: ports/at91sam7s/makefile
+at91sam7s: ports/at91sam7s/Makefile
 	$(MAKE) -s -C ports/at91sam7s clean all
+
+stm32f10x: ports/stm32f10x/Makefile
+	$(MAKE) -s -C ports/stm32f10x clean all
+
+mstpsnap: ports/linux/mstpsnap.mak
+	$(MAKE) -s -C ports/linux -f mstpsnap.mak clean all
 
 bdk-atxx4-mstp: ports/bdk-atxx4-mstp/Makefile
 	$(MAKE) -s -C ports/bdk-atxx4-mstp clean all

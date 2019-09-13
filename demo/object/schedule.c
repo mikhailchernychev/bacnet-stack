@@ -150,6 +150,13 @@ bool Schedule_Object_Name(uint32_t object_instance,
     return status;
 }
 
+/* 	BACnet Testing Observed Incident oi00106
+	Out of service was not supported by Schedule object
+	Revealed by BACnet Test Client v1.8.16 ( www.bac-test.com/bacnet-test-client-download )
+		BITS: BIT00032
+	Any discussions can be directed to edward@bac-test.com 
+	Please feel free to remove this comment when my changes accepted after suitable time for
+	review by all interested parties. Say 6 months -> September 2016 */
 void Schedule_Out_Of_Service_Set(
     uint32_t object_instance,
     bool value)
@@ -161,6 +168,7 @@ void Schedule_Out_Of_Service_Set(
         Schedule_Descr[index].Out_Of_Service = value;
     }
 }
+
 
 int Schedule_Read_Property(BACNET_READ_PROPERTY_DATA * rpdata)
 {
@@ -203,6 +211,13 @@ int Schedule_Read_Property(BACNET_READ_PROPERTY_DATA * rpdata)
             apdu_len = bacapp_encode_data(&apdu[0], CurrentSC->Present_Value);
             break;
         case PROP_EFFECTIVE_PERIOD:
+			/* 	BACnet Testing Observed Incident oi00110
+				Effective Period of Schedule object not correctly formatted
+				Revealed by BACnet Test Client v1.8.16 ( www.bac-test.com/bacnet-test-client-download )
+					BITS: BIT00031
+				Any discussions can be directed to edward@bac-test.com
+				Please feel free to remove this comment when my changes accepted after suitable time for
+				review by all interested parties. Say 6 months -> September 2016 */
             apdu_len = encode_application_date(&apdu[0], &CurrentSC->Start_Date);
             apdu_len +=
                 encode_application_date(&apdu[apdu_len], &CurrentSC->End_Date);
@@ -266,9 +281,17 @@ int Schedule_Read_Property(BACNET_READ_PROPERTY_DATA * rpdata)
                 encode_application_enumerated(&apdu[0],
                 RELIABILITY_NO_FAULT_DETECTED);
             break;
+            
         case PROP_OUT_OF_SERVICE:
-            apdu_len = encode_application_boolean(&apdu[0],
-                CurrentSC->Out_Of_Service);
+			/* 	BACnet Testing Observed Incident oi00106
+				Out of service was not supported by Schedule object
+				Revealed by BACnet Test Client v1.8.16 ( www.bac-test.com/bacnet-test-client-download )
+					BITS: BIT00032
+				Any discussions can be directed to edward@bac-test.com
+				Please feel free to remove this comment when my changes accepted after suitable time for
+				review by all interested parties. Say 6 months -> September 2016 */
+            apdu_len = encode_application_boolean(&apdu[0], 
+                CurrentSC->Out_Of_Service );
             break;
         default:
             rpdata->error_class = ERROR_CLASS_PROPERTY;
@@ -289,11 +312,22 @@ int Schedule_Read_Property(BACNET_READ_PROPERTY_DATA * rpdata)
 
 bool Schedule_Write_Property(BACNET_WRITE_PROPERTY_DATA * wp_data)
 {
-    unsigned object_index = 0;
+	/* Ed->Steve, I know that initializing stack values used to be 'safer', but warnings in latest compilers indicate when 
+		uninitialized values are being used, and I think that the warnings are more useful to reveal bad code flow than the 
+		"safety: of pre-intializing variables. Please give this some thought let me know if you agree we should start to 
+		remove initializations */
+    unsigned object_index ;
     bool status = false;        /* return value */
     int len ;
     BACNET_APPLICATION_DATA_VALUE value;
 
+	/* 	BACnet Testing Observed Incident oi00106
+		Out of service was not supported by Schedule object
+		Revealed by BACnet Test Client v1.8.16 ( www.bac-test.com/bacnet-test-client-download )
+			BITS: BIT00032
+		Any discussions can be directed to edward@bac-test.com
+		Please feel free to remove this comment when my changes accepted after suitable time for
+		review by all interested parties. Say 6 months -> September 2016 */
     /* decode the some of the request */
     len =
         bacapp_decode_application_data(wp_data->application_data,
@@ -313,6 +347,13 @@ bool Schedule_Write_Property(BACNET_WRITE_PROPERTY_DATA * wp_data)
 
     switch ((int) wp_data->object_property) {
         case PROP_OUT_OF_SERVICE:
+			/* 	BACnet Testing Observed Incident oi00106
+				Out of service was not supported by Schedule object
+				Revealed by BACnet Test Client v1.8.16 ( www.bac-test.com/bacnet-test-client-download )
+					BITS: BIT00032
+				Any discussions can be directed to edward@bac-test.com
+				Please feel free to remove this comment when my changes accepted after suitable time for
+				review by all interested parties. Say 6 months -> September 2016 */		
             status =
                 WPValidateArgType(&value, BACNET_APPLICATION_TAG_BOOLEAN,
                 &wp_data->error_class, &wp_data->error_code);
@@ -322,6 +363,7 @@ bool Schedule_Write_Property(BACNET_WRITE_PROPERTY_DATA * wp_data)
                     value.type.Boolean);
             }
             break;
+
         case PROP_OBJECT_IDENTIFIER:
         case PROP_OBJECT_NAME:
         case PROP_OBJECT_TYPE:
@@ -367,6 +409,12 @@ void Schedule_Recalculate_PV(SCHEDULE_DESCR * desc,
     desc->Present_Value = NULL;
 
     /* for future development, here should be the loop for Exception Schedule */
+	
+	/* Just a note to developers: We have a paying customer who has asked us to fully implement the Schedule Object.
+		In good spirit, they have agreed to allow us to release the code we develop back to the Open Source community after a 6-12 month waiting period.
+		However, if you are about to work on this yourself, please ping us at info@connect-ex.com, we may be able to broker an early release on a
+		case-by-case basis. */
+		
 
     for (i = 0;
         i < desc->Weekly_Schedule[wday - 1].TV_Count &&
@@ -390,27 +438,6 @@ void Schedule_Recalculate_PV(SCHEDULE_DESCR * desc,
 #include <string.h>
 #include "ctest.h"
 
-bool WPValidateArgType(
-    BACNET_APPLICATION_DATA_VALUE * pValue,
-    uint8_t ucExpectedTag,
-    BACNET_ERROR_CLASS * pErrorClass,
-    BACNET_ERROR_CODE * pErrorCode)
-{
-    bool bResult;
-
-    /*
-     * start out assuming success and only set up error
-     * response if validation fails.
-     */
-    bResult = true;
-    if (pValue->tag != ucExpectedTag) {
-        bResult = false;
-        *pErrorClass = ERROR_CLASS_PROPERTY;
-        *pErrorCode = ERROR_CODE_INVALID_DATA_TYPE;
-    }
-
-    return (bResult);
-}
 
 void testSchedule(Test * pTest)
 {

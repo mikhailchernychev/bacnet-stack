@@ -1205,11 +1205,11 @@ bool Lighting_Output_Write_Property(
                         status = Lighting_Output_Present_Value_Relinquish(
                             wp_data->object_instance, wp_data->priority);
                         if (!status) {
-                        wp_data->error_class = ERROR_CLASS_PROPERTY;
-                        wp_data->error_code = ERROR_CODE_VALUE_OUT_OF_RANGE;
+                            wp_data->error_class = ERROR_CLASS_PROPERTY;
+                            wp_data->error_code = ERROR_CODE_VALUE_OUT_OF_RANGE;
+                        }
                     }
                 }
-            }
             }
             break;
         case PROP_LIGHTING_COMMAND:

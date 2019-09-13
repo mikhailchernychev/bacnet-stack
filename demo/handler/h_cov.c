@@ -47,9 +47,13 @@
 #include "device.h"
 #include "handlers.h"
 
+#ifndef MAX_COV_PROPERTIES
+#define MAX_COV_PROPERTIES 2
+#endif
+
 /** @file h_cov.c  Handles Change of Value (COV) services. */
 
-typedef struct BACnet_COV_Address{
+typedef struct BACnet_COV_Address {
     bool valid:1;
     BACNET_ADDRESS dest;
 } BACNET_COV_ADDRESS;
@@ -106,7 +110,8 @@ static BACNET_ADDRESS *cov_address_get(
  * Removes the address from the list of COV addresses, if it is not
  * used by other COV subscriptions
  */
-static void cov_address_remove_unused(void)
+static void cov_address_remove_unused(
+    void)
 {
     unsigned index = 0;
     unsigned cov_index = 0;
@@ -137,7 +142,7 @@ static void cov_address_remove_unused(void)
 * @return index number 0..N, or -1 if unable to add
 */
 static int cov_address_add(
-    BACNET_ADDRESS *dest)
+    BACNET_ADDRESS * dest)
 {
     int index = -1;
     unsigned i = 0;
@@ -475,8 +480,8 @@ static bool cov_send_request(
     datalink_get_my_address(&my_address);
     npdu_encode_npdu_data(&npdu_data, false, MESSAGE_PRIORITY_NORMAL);
     pdu_len =
-        npdu_encode_pdu(&Handler_Transmit_Buffer[0], dest,
-        &my_address, &npdu_data);
+        npdu_encode_pdu(&Handler_Transmit_Buffer[0], dest, &my_address,
+        &npdu_data);
     /* load the COV data structure for outgoing message */
     cov_data.subscriberProcessIdentifier =
         cov_subscription->subscriberProcessIdentifier;
@@ -494,24 +499,23 @@ static bool cov_send_request(
             cov_subscription->invokeID = invoke_id;
             len =
                 ccov_notify_encode_apdu(&Handler_Transmit_Buffer[pdu_len],
-                invoke_id, &cov_data);
+                sizeof(Handler_Transmit_Buffer) - pdu_len, invoke_id, &cov_data);
         } else {
             goto COV_FAILED;
         }
     } else {
         len =
             ucov_notify_encode_apdu(&Handler_Transmit_Buffer[pdu_len],
-            &cov_data);
+            sizeof(Handler_Transmit_Buffer) - pdu_len, &cov_data);
     }
     pdu_len += len;
     if (cov_subscription->flag.issueConfirmedNotifications) {
-        tsm_set_confirmed_unsegmented_transaction(invoke_id,
-            dest, &npdu_data, &Handler_Transmit_Buffer[0],
-            (uint16_t) pdu_len);
+        tsm_set_confirmed_unsegmented_transaction(invoke_id, dest, &npdu_data,
+            &Handler_Transmit_Buffer[0], (uint16_t) pdu_len);
     }
     bytes_sent =
-        datalink_send_pdu(dest, &npdu_data,
-        &Handler_Transmit_Buffer[0], pdu_len);
+        datalink_send_pdu(dest, &npdu_data, &Handler_Transmit_Buffer[0],
+        pdu_len);
     if (bytes_sent > 0) {
         status = true;
 #if PRINT_ENABLED
@@ -616,7 +620,7 @@ bool handler_cov_fsm(
     uint32_t object_instance = 0;
     bool status = false;
     bool send = false;
-    BACNET_PROPERTY_VALUE value_list[2];
+    BACNET_PROPERTY_VALUE value_list[MAX_COV_PROPERTIES];
     /* states for transmitting */
     static enum {
         COV_STATE_IDLE = 0,
@@ -716,10 +720,9 @@ bool handler_cov_fsm(
                     fprintf(stderr, "COVtask: Sending...\n");
 #endif
                     /* configure the linked list for the two properties */
-                    value_list[0].next = &value_list[1];
-                    value_list[1].next = NULL;
-                    status =
-                        Device_Encode_Value_List(object_type,
+                    bacapp_property_value_list_init(&value_list[0],
+                        MAX_COV_PROPERTIES);
+                    status = Device_Encode_Value_List(object_type,
                         object_instance, &value_list[0]);
                     if (status) {
                         status =
@@ -742,7 +745,6 @@ bool handler_cov_fsm(
             cov_task_state = COV_STATE_IDLE;
             break;
     }
-
     return (cov_task_state == COV_STATE_IDLE);
 }
 
@@ -902,6 +904,7 @@ void handler_cov_subscribe(
             strerror(errno));
 #endif
     }
+
 
     return;
 }

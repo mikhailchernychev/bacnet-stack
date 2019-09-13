@@ -48,6 +48,9 @@ extern "C" {
         bool Out_Of_Service;
         uint16_t Units;
         float Present_Value;
+        float Prior_Value;
+        float COV_Increment;
+        bool Changed;
 #if defined(INTRINSIC_REPORTING)
         uint32_t Time_Delay;
         uint32_t Notification_Class;
@@ -83,6 +86,9 @@ extern "C" {
     bool Analog_Value_Object_Name(
         uint32_t object_instance,
         BACNET_CHARACTER_STRING * object_name);
+    bool Analog_Value_Name_Set(
+        uint32_t object_instance,
+        char *new_name);
 
     int Analog_Value_Read_Property(
         BACNET_READ_PROPERTY_DATA * rpdata);
@@ -96,6 +102,7 @@ extern "C" {
         uint8_t priority);
     float Analog_Value_Present_Value(
         uint32_t object_instance);
+
     bool Analog_Value_Change_Of_Value(
         uint32_t instance);
     void Analog_Value_Change_Of_Value_Clear(
@@ -115,10 +122,17 @@ extern "C" {
         uint32_t instance,
         char *new_name);
 
+    BACNET_RELIABILITY Analog_Value_Reliability(
+        uint32_t object_instance);
+    bool Analog_Value_Reliability_Set(
+        uint32_t object_instance,
+        BACNET_RELIABILITY value);
+
     uint16_t Analog_Value_Units(
         uint32_t instance);
     bool Analog_Value_Units_Set(
-        uint32_t instance, uint16_t unit);
+        uint32_t instance,
+        uint16_t unit);
 
     bool Analog_Value_Out_Of_Service(
         uint32_t instance);

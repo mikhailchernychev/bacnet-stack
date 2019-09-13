@@ -2,7 +2,7 @@
 CC      = gcc
 SRC_DIR = ../src
 INCLUDES = -I../include -I.
-DEFINES = -DBIG_ENDIAN=0 -DBACNET_ADDRESS_CACHE_FILE -DTEST -DTEST_ADDRESS
+DEFINES = -DBIG_ENDIAN=0 -DTEST -DTEST_ADDRESS -DBACNET_ADDRESS_CACHE_FILE
 
 CFLAGS  = -Wall $(INCLUDES) $(DEFINES) -g
 
@@ -15,6 +15,7 @@ SRCS = $(SRC_DIR)/address.c \
 	$(SRC_DIR)/bacapp.c \
 	$(SRC_DIR)/bacdevobjpropref.c \
 	$(SRC_DIR)/datetime.c \
+	$(SRC_DIR)/lighting.c \
 	$(SRC_DIR)/bactext.c \
 	$(SRC_DIR)/indtext.c \
 	ctest.c

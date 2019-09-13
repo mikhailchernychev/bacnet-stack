@@ -108,9 +108,11 @@ extern "C" {
 
     int Send_UCOV_Notify(
         uint8_t * buffer,
+        unsigned buffer_len,
         BACNET_COV_DATA * cov_data);
     int ucov_notify_encode_pdu(
         uint8_t * buffer,
+        unsigned buffer_len,
         BACNET_ADDRESS * dest,
         BACNET_NPDU_DATA * npdu_data,
         BACNET_COV_DATA * cov_data);
@@ -162,9 +164,11 @@ extern "C" {
         int application_data_len,
         uint8_t priority,
         uint32_t array_index);
-	uint8_t Send_Write_Property_Multiple_Request_Data(
-		uint32_t device_id,
-		BACNET_WRITE_ACCESS_DATA * write_access_data);
+    uint8_t Send_Write_Property_Multiple_Request(
+        uint8_t * pdu,
+        size_t max_pdu,
+        uint32_t device_id,
+        BACNET_WRITE_ACCESS_DATA * write_access_data);
 
 /* returns the invoke ID for confirmed request, or 0 if failed */
     uint8_t Send_Reinitialize_Device_Request(
@@ -246,6 +250,56 @@ extern "C" {
     int Send_UnconfirmedPrivateTransfer(
         BACNET_ADDRESS * dest,
         BACNET_PRIVATE_TRANSFER_DATA * private_data);
+
+    uint8_t Send_Get_Alarm_Summary_Address(
+        BACNET_ADDRESS *dest,
+        uint16_t max_apdu);
+
+    uint8_t Send_Get_Alarm_Summary(
+        uint32_t device_id);
+
+    uint8_t Send_Get_Event_Information_Address(
+        BACNET_ADDRESS *dest,
+        uint16_t max_apdu,
+        BACNET_OBJECT_ID * lastReceivedObjectIdentifier);
+
+    uint8_t Send_Get_Event_Information(
+        uint32_t device_id,
+        BACNET_OBJECT_ID * lastReceivedObjectIdentifier);
+
+    int Send_Abort_To_Network(
+        uint8_t * buffer,
+        BACNET_ADDRESS *dest,
+        uint8_t invoke_id,
+        BACNET_ABORT_REASON reason,
+        bool server);
+
+    int abort_encode_pdu(
+        uint8_t * buffer,
+        BACNET_ADDRESS * dest,
+        BACNET_ADDRESS * src,
+        BACNET_NPDU_DATA * npdu_data,
+        uint8_t invoke_id,
+        BACNET_ABORT_REASON reason,
+        bool server);
+
+    int Send_Error_To_Network(
+        uint8_t * buffer,
+        BACNET_ADDRESS *dest,
+        uint8_t invoke_id,
+        BACNET_CONFIRMED_SERVICE service,
+        BACNET_ERROR_CLASS error_class,
+        BACNET_ERROR_CODE error_code);
+
+    int error_encode_pdu(
+        uint8_t * buffer,
+        BACNET_ADDRESS * dest,
+        BACNET_ADDRESS * src,
+        BACNET_NPDU_DATA * npdu_data,
+        uint8_t invoke_id,
+        BACNET_CONFIRMED_SERVICE service,
+        BACNET_ERROR_CLASS error_class,
+        BACNET_ERROR_CODE error_code);
 
 #ifdef __cplusplus
 }

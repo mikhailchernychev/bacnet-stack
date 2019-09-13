@@ -73,6 +73,13 @@ CORE_SRC = \
 	$(BACNET_CORE)/get_alarm_sum.c \
 	$(BACNET_CORE)/readrange.c \
 	$(BACNET_CORE)/timestamp.c \
+	$(BACNET_CORE)/lighting.c \
+	$(BACNET_CORE)/bacsec.c \
+	$(BACNET_CORE)/access_rule.c \
+	$(BACNET_CORE)/assigned_access_rights.c \
+	$(BACNET_CORE)/authentication_factor_format.c \
+	$(BACNET_CORE)/authentication_factor.c \
+	$(BACNET_CORE)/credential_authentication_factor.c \
 	$(BACNET_CORE)/version.c
 
 HANDLER_SRC = \
@@ -87,7 +94,7 @@ HANDLER_SRC = \
 	$(BACNET_HANDLER)/h_rpm.c \
 	$(BACNET_HANDLER)/h_rpm_a.c \
 	$(BACNET_HANDLER)/h_rr.c \
-	$(BACNET_HANDLER)/h_rr_a.c  \
+	$(BACNET_HANDLER)/h_rr_a.c \
 	$(BACNET_HANDLER)/h_wp.c  \
 	$(BACNET_HANDLER)/h_wpm.c \
 	$(BACNET_HANDLER)/h_alarm_ack.c  \
@@ -105,20 +112,25 @@ HANDLER_SRC = \
 	$(BACNET_HANDLER)/h_getevent.c  \
 	$(BACNET_HANDLER)/h_gas_a.c  \
 	$(BACNET_HANDLER)/h_get_alarm_sum.c  \
+	$(BACNET_HANDLER)/h_getevent_a.c  \
 	$(BACNET_HANDLER)/h_pt.c  \
 	$(BACNET_HANDLER)/h_pt_a.c  \
 	$(BACNET_HANDLER)/h_upt.c  \
+	$(BACNET_HANDLER)/s_abort.c \
 	$(BACNET_HANDLER)/s_arfs.c \
 	$(BACNET_HANDLER)/s_awfs.c \
 	$(BACNET_HANDLER)/s_dcc.c \
+	$(BACNET_HANDLER)/s_error.c \
 	$(BACNET_HANDLER)/s_ihave.c \
+	$(BACNET_HANDLER)/s_get_alarm_sum.c  \
+	$(BACNET_HANDLER)/s_get_event.c  \
 	$(BACNET_HANDLER)/s_iam.c  \
 	$(BACNET_HANDLER)/s_cov.c  \
 	$(BACNET_HANDLER)/s_ptransfer.c \
 	$(BACNET_HANDLER)/s_rd.c \
 	$(BACNET_HANDLER)/s_rp.c  \
-	$(BACNET_HANDLER)/s_rpm.c  \
 	$(BACNET_HANDLER)/s_readrange.c  \
+	$(BACNET_HANDLER)/s_rpm.c  \
 	$(BACNET_HANDLER)/s_ts.c \
 	$(BACNET_HANDLER)/s_cevent.c  \
 	$(BACNET_HANDLER)/s_router.c  \
@@ -127,7 +139,8 @@ HANDLER_SRC = \
 	$(BACNET_HANDLER)/s_whois.c  \
 	$(BACNET_HANDLER)/s_wpm.c  \
 	$(BACNET_HANDLER)/s_upt.c \
-	$(BACNET_HANDLER)/s_wp.c
+	$(BACNET_HANDLER)/s_wp.c \
+	$(BACNET_HANDLER)/s_getevent.c
 
 PORT_ARCNET_SRC = \
 	$(BACNET_PORT_DIR)/arcnet.c
@@ -180,6 +193,9 @@ PORT_SRC = ${PORT_ETHERNET_SRC}
 endif
 ifdef BACDL_ALL
 PORT_SRC = ${PORT_ALL_SRC}
+endif
+ifneq (,$(findstring -DBAC_UCI,$(BACNET_DEFINES)))
+UCI_SRC = $(BACNET_CORE)/ucix.c
 endif
 
 SRCS = ${CORE_SRC} ${PORT_SRC} ${HANDLER_SRC}

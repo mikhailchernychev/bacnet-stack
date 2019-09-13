@@ -40,7 +40,7 @@
 /* Although this stack can implement a later revision,
  * sometimes another revision is desired */
 #ifndef BACNET_PROTOCOL_REVISION
-#define BACNET_PROTOCOL_REVISION 12
+#define BACNET_PROTOCOL_REVISION 19
 #endif
 
 /* there are a few dependencies on the BACnet Protocol-Revision */
@@ -150,6 +150,12 @@ struct BACnet_Device_Address {
     uint8_t adr[MAX_MAC_LEN];   /* hwaddr (MAC) address */
 };
 typedef struct BACnet_Device_Address BACNET_ADDRESS;
+/* define a MAC address for manipulation */
+struct BACnet_MAC_Address {
+    uint8_t len;        /* length of MAC address */
+    uint8_t adr[MAX_MAC_LEN];
+};
+typedef struct BACnet_MAC_Address BACNET_MAC_ADDRESS;
 
 /* note: with microprocessors having lots more code space than memory,
    it might be better to have a packed encoding with a library to

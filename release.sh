@@ -4,7 +4,6 @@
 USERNAME=skarg
 PROJECT=bacnet
 SVN_BASE_URL=https://svn.code.sf.net/p/${PROJECT}/code
-SVN_BRANCH_NAME=${SVN_BASE_URL}/branches/releases/bacnet-stack-0-8-0
 SVN_MODULE=bacnet-stack
 FRS_URL=${USERNAME},${PROJECT}@frs.sourceforge.net:/home/frs/project/b/ba/bacnet/bacnet-stack
 
@@ -38,10 +37,11 @@ fi
 
 ARCHIVE_NAME=${SVN_MODULE}-${DOTTED_VERSION}
 
+SVN_TRUNK_NAME=${SVN_BASE_URL}/trunk/${SVN_MODULE}
 SVN_TAGGED_NAME=${SVN_BASE_URL}/tags/${ARCHIVE_NAME}
 echo "Setting a tag on the ${SVN_MODULE} module called ${ARCHIVE_NAME}"
 TAG_COMMENT="Created version ${ARCHIVE_NAME}"
-svn copy --username=${USERNAME} ${SVN_BRANCH_NAME} ${SVN_TAGGED_NAME} -m "${TAG_COMMENT}"
+svn copy --username=${USERNAME} ${SVN_TRUNK_NAME} ${SVN_TAGGED_NAME} -m "${TAG_COMMENT}"
 echo "done."
 
 if [ -d "${ARCHIVE_NAME}" ]
@@ -52,7 +52,7 @@ then
 fi
 
 echo "Getting a clean version out of subversion for Linux gzip"
-svn export --username=${USERNAME} ${SVN_TAGGED_NAME} ${ARCHIVE_NAME}
+svn export --username=${USERNAME} ${SVN_TAGGED_NAME} ${ARCHIVE_NAME} > /dev/null
 echo "done."
 
 GZIP_FILENAME=${ARCHIVE_NAME}.tgz
@@ -63,7 +63,7 @@ then
   rm ${GZIP_FILENAME}
   echo "done."
 fi
-tar -cvvzf ${GZIP_FILENAME} ${ARCHIVE_NAME}/
+tar -cvvzf ${GZIP_FILENAME} ${ARCHIVE_NAME}/ > /dev/null
 echo "done."
 if [ -e "${GZIP_FILENAME}" ]
 then
@@ -84,7 +84,7 @@ svn export --username=${USERNAME} --native-eol CRLF ${SVN_TAGGED_NAME} ${ARCHIVE
 ZIP_FILENAME=${ARCHIVE_NAME}.zip
 echo "done."
 echo "Zipping the directory exported for Windows."
-zip -r ${ZIP_FILENAME} ${ARCHIVE_NAME}
+zip -r ${ZIP_FILENAME} ${ARCHIVE_NAME} > /dev/null
 
 if [ -e "${ZIP_FILENAME}" ]
 then
@@ -110,6 +110,6 @@ mv ${CHANGELOG} ${ARCHIVE_NAME}
 cp readme.txt ${ARCHIVE_NAME}
 
 echo "Sending ${ARCHIVE_NAME} to SourceForge using scp..."
-echo "scp -r ${ARCHIVE_NAME} ${FRS_URL}"
 scp -r ${ARCHIVE_NAME} ${FRS_URL}
+
 echo "Complete!"

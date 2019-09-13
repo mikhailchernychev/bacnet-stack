@@ -102,6 +102,7 @@ void handler_read_property(
     int property_len = 0;
     int pdu_len = 0;
     BACNET_NPDU_DATA npdu_data;
+    int bytes_sent = 0;
     BACNET_ERROR_CLASS error_class = ERROR_CLASS_OBJECT;
     BACNET_ERROR_CODE error_code = ERROR_CODE_UNKNOWN_OBJECT;
     BACNET_ADDRESS my_address;
@@ -160,7 +161,8 @@ void handler_read_property(
     }
   RP_ABORT:
     pdu_len += len;
-    datalink_send_pdu(src, &npdu_data, &Handler_Transmit_Buffer[0],
+    bytes_sent =
+        datalink_send_pdu(src, &npdu_data, &Handler_Transmit_Buffer[0],
         pdu_len);
 
     return;

@@ -32,7 +32,7 @@
    see datalink.h for possible defines. */
 #if !(defined(BACDL_ETHERNET) || defined(BACDL_ARCNET) || \
     defined(BACDL_MSTP) || defined(BACDL_BIP) || defined(BACDL_BIP6) || \
-    defined(BACDL_TEST) || defined(BACDL_ALL))
+    defined(BACDL_TEST) || defined(BACDL_ALL) || defined(BACDL_NONE))
 #define BACDL_BIP
 #endif
 
@@ -94,9 +94,17 @@
 #elif defined(BACDL_BIP6)
 #define MAX_APDU 1476
 #elif defined (BACDL_ETHERNET)
+#if defined(BACNET_SECURITY)
+#define MAX_APDU 1420
+#else
 #define MAX_APDU 1476
+#endif
+#else
+#if defined(BACNET_SECURITY)
+#define MAX_APDU 412
 #else
 #define MAX_APDU 480
+#endif
 #endif
 #endif
 
@@ -138,6 +146,7 @@
     defined(BACAPP_ENUMERATED) || \
     defined(BACAPP_DATE) || \
     defined(BACAPP_TIME) || \
+    defined(BACAPP_LIGHTING_COMMAND) || \
     defined(BACAPP_DEVICE_OBJECT_PROP_REF) || \
     defined(BACAPP_OBJECT_ID))
 #define BACAPP_ALL
@@ -158,17 +167,18 @@
 #define BACAPP_TIME
 #define BACAPP_OBJECT_ID
 #define BACAPP_DEVICE_OBJECT_PROP_REF
+#define BACAPP_LIGHTING_COMMAND
 #elif defined (BACAPP_MINIMAL)
-    #define BACAPP_NULL
-    #define BACAPP_BOOLEAN
-    #define BACAPP_UNSIGNED
-    #define BACAPP_SIGNED
-    #define BACAPP_REAL
-    #define BACAPP_CHARACTER_STRING
-    #define BACAPP_ENUMERATED
-    #define BACAPP_DATE
-    #define BACAPP_TIME
-    #define BACAPP_OBJECT_ID
+#define BACAPP_NULL
+#define BACAPP_BOOLEAN
+#define BACAPP_UNSIGNED
+#define BACAPP_SIGNED
+#define BACAPP_REAL
+#define BACAPP_CHARACTER_STRING
+#define BACAPP_ENUMERATED
+#define BACAPP_DATE
+#define BACAPP_TIME
+#define BACAPP_OBJECT_ID
 #endif
 
 /*

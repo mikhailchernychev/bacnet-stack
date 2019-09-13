@@ -17,6 +17,7 @@ SRCS = lc.c ao.c \
 	$(SRC_DIR)/bacdevobjpropref.c \
 	$(SRC_DIR)/bactext.c \
 	$(SRC_DIR)/indtext.c \
+	$(SRC_DIR)/lighting.c \
 	$(TEST_DIR)/ctest.c
 
 TARGET = load_control

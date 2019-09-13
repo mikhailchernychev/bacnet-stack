@@ -87,6 +87,7 @@ extern "C" {
     bool Schedule_Out_Of_Service(
         uint32_t object_instance);
 
+
     bool Schedule_Object_Name(uint32_t object_instance,
         BACNET_CHARACTER_STRING * object_name);
 

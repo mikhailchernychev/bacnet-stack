@@ -4,7 +4,7 @@ SRC_DIR = ../src
 INCLUDES = -I../include -I.
 DEFINES = -DBIG_ENDIAN=0 -DTEST -DTEST_BVLC6
 
-CFLAGS  = -Wall -Wmissing-prototypes $(INCLUDES) $(DEFINES) -g
+CFLAGS  = -Wall $(INCLUDES) $(DEFINES) -g
 
 SRCS = $(SRC_DIR)/bacdcode.c \
 	$(SRC_DIR)/bacint.c \

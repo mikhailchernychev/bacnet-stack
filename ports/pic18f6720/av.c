@@ -28,7 +28,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 #include "bacdef.h"
 #include "bacdcode.h"
 #include "bacenum.h"
@@ -142,7 +141,7 @@ char *Analog_Value_Name(
     static char text_string[32] = "";   /* okay for single thread */
 
     if (object_instance < MAX_ANALOG_VALUES) {
-        sprintf(text_string, "AV-%lu",  (unsigned long) object_instance);
+        sprintf(text_string, "AV-%lu", object_instance);
         return text_string;
     }
 
@@ -257,7 +256,7 @@ int Analog_Value_Read_Property(
                 } else {
                     *error_class = ERROR_CLASS_PROPERTY;
                     *error_code = ERROR_CODE_INVALID_ARRAY_INDEX;
-                    apdu_len = -1;
+                    apdu_len = BACNET_STATUS_ERROR;
                 }
             }
 
@@ -270,7 +269,7 @@ int Analog_Value_Read_Property(
         default:
             rpdata->error_class = ERROR_CLASS_PROPERTY;
             rpdata->error_code = ERROR_CODE_UNKNOWN_PROPERTY;
-            apdu_len = -1;
+            apdu_len = BACNET_STATUS_ERROR;
             break;
     }
     /*  only array properties can have array options */
@@ -281,7 +280,7 @@ int Analog_Value_Read_Property(
         (rpdata->array_index != BACNET_ARRAY_ALL)) {
         rpdata->error_class = ERROR_CLASS_PROPERTY;
         rpdata->error_code = ERROR_CODE_PROPERTY_IS_NOT_AN_ARRAY;
-        apdu_len = -1;
+        apdu_len = BACNET_STATUS_ERROR;
     }
 
     return apdu_len;

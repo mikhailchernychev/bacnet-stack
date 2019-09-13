@@ -89,8 +89,7 @@ extern void routed_get_my_address(
 #define datalink_get_broadcast_address bip6_get_broadcast_address
 #define datalink_get_my_address bip6_get_my_address
 
-
-#else /* Ie, BACDL_ALL */
+#elif defined(BACDL_ALL) || defined(BACDL_NONE)
 #include "npdu.h"
 
 #define MAX_HEADER (8)
@@ -146,7 +145,7 @@ extern "C" {
  *                     chosen at runtime from among these choices.
  * - Clause 10 POINT-TO-POINT (PTP) and Clause 11 EIA/CEA-709.1 ("LonTalk") LAN
  *   are not currently supported by this project.
-                                              *//** @defgroup DLTemplates DataLink Template Functions
+                                                                                                                                                                                              *//** @defgroup DLTemplates DataLink Template Functions
  * @ingroup DataLink
  * Most of the functions in this group are function templates which are assigned
  * to a specific DataLink network layer implementation either at compile time or

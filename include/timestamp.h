@@ -34,7 +34,7 @@ typedef enum {
 
 typedef uint8_t TYPE_BACNET_TIMESTAMP_TYPE;
 
-typedef struct {
+typedef struct BACnet_Timestamp {
     TYPE_BACNET_TIMESTAMP_TYPE tag;
     union {
         BACNET_TIME time;
@@ -47,6 +47,17 @@ typedef struct {
 extern "C" {
 #endif /* __cplusplus */
 
+    void bacapp_timestamp_sequence_set(
+        BACNET_TIMESTAMP * dest,
+        uint16_t sequenceNum);
+
+    void bacapp_timestamp_time_set(
+        BACNET_TIMESTAMP * dest,
+        BACNET_TIME *btime);
+
+    void bacapp_timestamp_datetime_set(
+        BACNET_TIMESTAMP * dest,
+        BACNET_DATE_TIME * bdateTime);
 
     void bacapp_timestamp_copy(
         BACNET_TIMESTAMP * dest,

@@ -59,23 +59,25 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BACnet Solution Settings.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BACnet Solution Settings.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BACnet Solution Settings.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\BACnet Solution Settings.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(VC_IncludePath);$(UniversalCRT_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(VC_IncludePath);$(UniversalCRT_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(UniversalCRT_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
@@ -86,13 +88,6 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level4</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;BACDL_BIP;USE_INADDR=0;BACAPP_ALL;BACAPP_ALL_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\ports\win32;..\..\..\..\include;..\..\..\..\demo\object;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ExceptionHandling>Async</ExceptionHandling>
-      <DisableSpecificWarnings>4244;4100;4701</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,7 +104,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;BACDL_BIP;USE_INADDR=0;BACAPP_ALL;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\..\ports\win32;..\..\..\..\include;..\..\..\..\demo\object;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4244;4100;4701</DisableSpecificWarnings>
     </ClCompile>
@@ -183,8 +178,6 @@
     <ClCompile Include="..\..\..\..\demo\object\channel.c" />
     <ClCompile Include="..\..\..\..\demo\object\command.c" />
     <ClCompile Include="..\..\..\..\demo\object\csv.c" />
-    <ClCompile Include="..\..\..\..\demo\object\device-client.c" />
-    <ClCompile Include="..\..\..\..\demo\object\device.c" />
     <ClCompile Include="..\..\..\..\demo\object\gw_device.c" />
     <ClCompile Include="..\..\..\..\demo\object\iv.c" />
     <ClCompile Include="..\..\..\..\demo\object\lc.c" />
@@ -194,6 +187,9 @@
     <ClCompile Include="..\..\..\..\demo\object\mso.c" />
     <ClCompile Include="..\..\..\..\demo\object\msv.c" />
     <ClCompile Include="..\..\..\..\demo\object\nc.c" />
+    <ClCompile Include="..\..\..\..\demo\object\osv.c" />
+    <ClCompile Include="..\..\..\..\demo\object\piv.c" />
+    <ClCompile Include="..\..\..\..\demo\object\schedule.c" />
     <ClCompile Include="..\..\..\..\demo\object\trendlog.c" />
   </ItemGroup>
   <ItemGroup>
