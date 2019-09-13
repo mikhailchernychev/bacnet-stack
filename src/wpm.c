@@ -268,6 +268,7 @@ int wpm_encode_apdu(
     uint8_t apdu_temp[MAX_APDU];        /* temp for data before copy */
     BACNET_PROPERTY_VALUE *wpm_property;        /* current property */
     BACNET_WRITE_PROPERTY_DATA wpdata;  /* for compatibility with wpm_encode_apdu_object_property function */
+    (void)max_apdu;
 
     if (apdu) {
         len = wpm_encode_apdu_init(&apdu[0], invoke_id);

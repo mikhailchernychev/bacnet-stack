@@ -1018,7 +1018,7 @@ static bool append_str(
     int bytes_written;
 
     bytes_written = snprintf(*str, *rem_str_len, "%s", add_str);
-    if ((bytes_written < 0) || (bytes_written >= *rem_str_len)) {
+    if ((bytes_written < 0) || (bytes_written >= (int)*rem_str_len)) {
         /* If there was an error or output was truncated, return error */
         retval = false;
     } else {

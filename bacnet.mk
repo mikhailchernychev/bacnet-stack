@@ -16,8 +16,9 @@ CFLAGS += -g -I $(bacnet)/include -I $(bacnet)/ports/linux -I $(bacnet)/demo/obj
 libfiles := $(filter-out $(bacnet)/src/mstp.c, $(wildcard $(bacnet)/src/*.c))
 libfiles := $(filter-out $(bacnet)/src/datalink.c, $(libfiles))
 libfiles := $(filter-out $(bacnet)/src/ucix.c, $(libfiles))
+libfiles := $(filter-out $(bacnet)/src/bacsec.c, $(libfiles))
 
-libfiles += $(bacnet)/demo/object/candi-device-client.c 
+libfiles += $(bacnet)/demo/object/candi-device-client.c $(bacnet)/demo/object/netport.c
 
 libfiles += $(bacnet)/demo/handler/h_whois.c   $(bacnet)/demo/handler/h_iam.c \
             $(bacnet)/demo/handler/noserv.c    $(bacnet)/demo/handler/txbuf.c \
@@ -30,7 +31,7 @@ libfiles += $(bacnet)/demo/handler/h_whois.c   $(bacnet)/demo/handler/h_iam.c \
             $(bacnet)/demo/handler/h_wpm.c     $(bacnet)/demo/handler/h_rp_a.c \
 
 
-libfiles += $(bacnet)/ports/linux/bip-init.c 
+libfiles += $(bacnet)/ports/linux/bip-init.c
 
 subdirs := $(bacnet)/src/ $(bacnet)/demo/object/ $(bacnet)/demo/handler $(bacnet)/ports/linux
 
