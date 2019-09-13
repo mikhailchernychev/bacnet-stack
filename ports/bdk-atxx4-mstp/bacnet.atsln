@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
 Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "BACnet Development Kit", "bacnet.cproj", "{1CEFD571-4B50-48FD-B75E-0E968EBBD698}"

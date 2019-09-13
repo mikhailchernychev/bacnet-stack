@@ -150,11 +150,13 @@ uint8_t Send_Read_Property_Request(
     BACNET_PROPERTY_ID object_property,
     uint32_t array_index)
 {
-    BACNET_ADDRESS dest = { 0 };
+    BACNET_ADDRESS dest;
     unsigned max_apdu = 0;
     uint8_t invoke_id = 0;
     bool status = false;
 
+    memset(&dest, 0, sizeof(dest));
+    
     /* is the device bound? */
     status = address_get_by_device(device_id, &max_apdu, &dest);
     if (status) {

@@ -80,6 +80,7 @@ CORE_SRC = \
 	$(BACNET_CORE)/authentication_factor_format.c \
 	$(BACNET_CORE)/authentication_factor.c \
 	$(BACNET_CORE)/credential_authentication_factor.c \
+	$(BACNET_CORE)/candi_s.c \
 	$(BACNET_CORE)/version.c
 
 HANDLER_SRC = \
