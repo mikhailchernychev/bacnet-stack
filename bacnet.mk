@@ -12,7 +12,6 @@ CFLAGS += -g -I $(bacnet)/include -I $(bacnet)/ports/linux -I $(bacnet)/demo/obj
           -DPRINT_ENABLED=1 -DBACAPP_ALL -DBACDL_BIP=1 -DBBMD_ENABLED=1 -DMAX_ADDRESS_CACHE=1024  \
           -DBACNET_VENDOR_NAME="\"Altair SmartEdge IoT Server(tm)\"" -DBACNET_VENDOR_ID=894 -DAUTO_PORT=1
 
-
 libfiles := $(filter-out $(bacnet)/src/mstp.c, $(wildcard $(bacnet)/src/*.c))
 libfiles := $(filter-out $(bacnet)/src/datalink.c, $(libfiles))
 libfiles := $(filter-out $(bacnet)/src/ucix.c, $(libfiles))
@@ -38,7 +37,7 @@ subdirs := $(bacnet)/src/ $(bacnet)/demo/object/ $(bacnet)/demo/handler $(bacnet
 sources=$(libfiles)
 
 include $(TOP)/includes/build.mk
-
+CFLAGS := $(filter-out -Werror, $(CFLAGS))
 
 includes:
 	mkdir -p $(staging)/usr/include/bacnet/ports/linux
